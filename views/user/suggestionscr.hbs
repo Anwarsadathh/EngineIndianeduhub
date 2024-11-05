@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{title}}</title>
+  <!-- Font Awesome and Bootstrap -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+  <!-- Select2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: "Poppins", sans-serif !important;
+      background-color: #ffffff;
+      color: #333;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-y: auto;
+    }
+
+    /* Center the container */
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    /* Form container styling */
+    .form-container {
+      max-width: 800px;
+      width: 100%;
+      padding: 3rem;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      border-radius: 20px;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    /* Table container styling */
+    .table-container {
+      width: 100%;
+      padding: 20px;
+      margin: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #f8f9fa;
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    /* Header Styling */
+    thead th {
+      background: linear-gradient(45deg, #1a2a6c, #2b4f81, #537895) !important;
+      color: #ffffff;
+      font-weight: bold;
+      padding: 0.5rem;
+      text-align: left;
+      font-size: 0.75rem; /* Smaller font size */
+    }
+
+    /* Body Styling */
+    tbody td {
+      padding: 0.5rem;
+      border-bottom: 1px solid #dee2e6;
+      color: #333;
+      font-size: 0.75rem; /* Smaller font size */
+    }
+
+    /* Row hover effect */
+    tbody tr:hover {
+      background-color: #e2e6ea;
+    }
+
+    /* List styling within table cells */
+    td ul {
+      padding-left: 1rem;
+      margin: 0;
+    }
+
+    td ul li {
+      list-style-type: disc;
+      color: #555;
+      font-size: 0.75rem; /* Smaller font size */
+    }
+
+    /* Form and button styling */
+    h5 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #070707;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    label {
+      font-weight: bold;
+      color: #4a4a4a;
+      font-size: 0.85rem; /* Smaller font size */
+    }
+
+    .form-select {
+      background: rgba(255, 255, 255, 0.8);
+      border: none;
+      color: #333;
+      padding: 0.5rem;
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px rgba(170, 170, 170, 0.7);
+      transition: box-shadow 0.3s ease;
+      font-size: 0.85rem; /* Smaller font size */
+    }
+
+    .submit-btn {
+      background: linear-gradient(45deg, #1a2a6c, #2b4f81, #537895) !important;
+      color: #ffffff;
+      font-weight: bold;
+      border: none;
+      box-shadow: 0px 4px 10px rgba(26, 42, 108, 0.5);
+      padding: 0.8rem;
+      border-radius: 10px;
+      font-size: 0.85rem; /* Smaller font size */
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    /* Mobile styling */
+    @media (max-width: 768px) {
+      .form-container {
+        padding: 2rem;
+      }
+
+      h5 {
+        font-size: 1.5rem;
+      }
+
+      .submit-btn {
+        padding: 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    /* Styling for each budget item */
+    table tbody td ul li.uni {
+      color: #000000;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      font-weight: bold;
+      font-size: 0.75rem; /* Smaller font size */
+      padding: 0.5rem; /* Reduced padding */
+      margin-top: 0.3rem; /* Spacing between items */
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    table tbody td ul li.uni p {
+      margin: 0;
+      padding-left: 0.5rem;
+      color: #555555;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="form-container">
+    <h5><i class="fas fa-graduation-cap"></i> Suggest the Best University for Students</h5>
+    <form id="suggestionForm" action="/admin/suggestions" method="post">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="courseSelect" class="form-label">Select Course</label>
+          <select id="courseSelect" name="course" class="form-select select2" required>
+            <option value="">Select a course</option>
+            {{#each availableCourses}}
+            <option value="{{this}}">{{this}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label for="specializationSelect" class="form-label">Select Specialization</label>
+          <select id="specializationSelect" name="specialization" class="form-select select2" required>
+            <option value="">Select a specialization</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="exposureSelect" class="form-label">Select Exposure</label>
+        <select id="exposureSelect" name="exposure" class="form-select select2" onchange="showBudgetOptions()">
+          <option value="" disabled selected hidden>Select Exposure</option>
+          <option value="High Exposure">Maximum Academic & Corporate Exposure</option>
+          <option value="Minimal Exposure">Minimum Academic & Corporate Exposure</option>
+          <option value="Just Complete Degree">Just want to complete a degree.</option>
+        </select>
+      </div>
+      <!-- New dropdown for selecting A, B, C, based on exposure -->
+      <div class="col-md-6 mb-3" id="exposureLevelContainer" style="display: none;">
+        <label for="exposureLevelSelect" class="form-label">Select Level</label>
+        <select id="exposureLevelSelect" name="exposureLevel" class="form-select select2" style="width: 200px !important" re>
+          <option value="" disabled selected hidden>Select Level</option>
+        </select>
+      </div>
+      <div id="budgetOptions" class="mb-3" style="display: none;">
+        <label class="form-label">Select your budget for university</label>
+        <div id="budgetWrapper"></div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="typeSelect" class="form-label">Government or Private</label>
+          <select id="typeSelect" name="type" class="form-select select2">
+            <option value="" disabled selected hidden>Select Type</option>
+            <option value="Govt Sector">Govt Sector</option>
+            <option value="Private Sector">Private Sector</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label for="abroadSelect" class="form-label">Abroad</label>
+          <select id="abroadSelect" name="abroad" class="form-select select2">
+            <option value="" disabled selected hidden>Select Option</option>
+            <option value="Abroad">Abroad</option>
+            <option value="India">India</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="universitySelect" class="form-label">Select Universities</label>
+        <select id="universitySelect" name="university" class="form-select select2" multiple required>
+          <option value="" disabled hidden>Select Universities</option>
+          {{#each engineData}}
+          <option value="{{this.universityName}}">{{this.universityName}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      <center>
+        <div class="d-grid gap-2 col-md-4">
+          <button type="submit" class="btn submit-btn"><i class="fas fa-paper-plane"></i> Submit</button>
+        </div>
+      </center>
+    </form>
+  </div>
+
+<div class="table-container">
+  <table id="suggestionsTable" class="display">
+    <thead>
+      <tr>
+        <th>#</th> <!-- Added for numbering -->
+        <th>Course</th>
+        <th>Specialization</th>
+        <th>Exposure</th>
+        <th>Type</th>
+        <th>exposureLevel</th>
+        <th>Place</th>
+        <th>Budget Range</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each suggestionsData}}
+      <tr>
+        <td>{{increment @index}}</td> <!-- This will start numbering from 1 -->
+
+        <td>{{this.course}}</td>
+        <td>{{this.specialization}}</td>
+        <td>{{this.exposure}}</td>
+        <td>{{this.type}}</td>
+        <td>{{this.exposureLevel}}</td>
+        <td> <b>{{this.abroad}}</b> </td>
+       <td>
+  <ul>
+    {{#each this.budget}}
+      <li class="uni">
+        <strong>{{@key}}:</strong> 
+        <p>{{this}}</p>
+        <!-- Show the count of universities -->
+        <span class="text-dark">(Total: {{countUniversities this}})</span>
+      </li>
+    {{/each}}
+  </ul>
+</td>
+
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+</div>
+<!-- DataTables CSS -->
+
+<!-- jQuery (required by DataTables) -->
+
+
+
+
+  <!-- Required Libraries -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+<!-- Initialize DataTables -->
+<script>
+  $(document).ready(function() {
+    $('#suggestionsTable').DataTable({
+      paging: true,
+      searching: true,
+      ordering: true,
+      responsive: true
+    });
+  });
+</script>
+
+<!-- JavaScript for dynamic functionality -->
+<script>
+function showBudgetOptions() {
+  const exposureSelect = document.getElementById('exposureSelect');
+  const budgetOptions = document.getElementById('budgetOptions');
+  const budgetWrapper = document.getElementById('budgetWrapper');
+  const exposureLevelContainer = document.getElementById('exposureLevelContainer');
+  const exposureLevelSelect = document.getElementById('exposureLevelSelect');
+
+  budgetOptions.style.display = 'block';
+
+  const budgets = {
+    "High Exposure": `
+      <input type="radio" value="1,00,000 - 1,50,000" name="budget" required>
+      <label>1,00,000 - 1,50,000</label>
+      <input type="radio" value="1,50,000 - 2,00,000" name="budget" required>
+      <label>1,50,000 - 2,00,000</label>
+      <input type="radio" value="2,00,000 - 2,50,000" name="budget" required>
+      <label>2,00,000 - 2,50,000</label>
+      <input type="radio" value="Above 2,50,000" name="budget" required>
+      <label>Above 2,50,000</label>
+    `,
+    "Minimal Exposure": `
+      <input type="radio" value="50,000 - 80,000" name="budget" required>
+      <label>50,000 - 80,000</label>
+      <input type="radio" value="80,000 - 1,00,000" name="budget" required>
+      <label>80,000 - 1,00,000</label>
+      <input type="radio" value="1,00,000 - 1,20,000" name="budget" required>
+      <label>1,00,000 - 1,20,000</label>
+    `,
+    "Just Complete Degree": `
+      <input type="radio" value="50,000 - 1,00,000" name="budget" required>
+      <label>50,000 - 1,00,000</label>
+      <input type="radio" value="1,00,000 - 1,50,000" name="budget" required>
+      <label>1,00,000 - 1,50,000</label>
+    `
+  };
+
+  const exposureLevels = {
+    "High Exposure": ['A', 'AA'],
+    "Minimal Exposure": ['B', 'BB'],
+    "Just Complete Degree": ['C', 'CC']
+  };
+
+  budgetWrapper.innerHTML = budgets[exposureSelect.value];
+  exposureLevelSelect.innerHTML = ''; // Clear previous options
+
+  // Populate the exposure level options
+  exposureLevels[exposureSelect.value].forEach(function(level) {
+    exposureLevelSelect.append(new Option(level, level));
+  });
+
+  exposureLevelContainer.style.display = 'block'; // Show the exposure level dropdown
+  exposureLevelSelect.value = ''; // Reset exposure level selection
+
+  // Add event listener to the budget radio buttons
+  budgetWrapper.addEventListener('change', function(e) {
+    if (e.target.name === 'budget') {
+      const abroadSelect = document.getElementById('abroadSelect');
+      if (!abroadSelect.value) {
+        abroadSelect.value = 'India';
+        $('#abroadSelect').trigger('change');
+      }
+      document.getElementById('typeSelect').value = 'Private Sector';
+      $('#typeSelect').trigger('change');
+    }
+  });
+}
+
+$(document).ready(function () {
+  $('.select2').select2();
+  const specializationMap = {{{json specializationMap}}};
+
+  $('#courseSelect').on('change', function() {
+    const selectedCourse = $(this).val();
+    const specializations = specializationMap[selectedCourse] || [];
+    const specializationSelect = $('#specializationSelect');
+    specializationSelect.empty().append('<option value="">Select a specialization</option>');
+    specializations.forEach(function(specialization) {
+      specializationSelect.append('<option value="' + specialization + '">' + specialization + '</option>');
+    });
+  });
+
+  $('#courseSelect, #specializationSelect, #exposureSelect').change(function () {
+    fetchExistingUniversities();
+  });
+
+  $('#suggestionForm').on('submit', function (e) {
+    e.preventDefault();
+    submitSuggestion();
+  });
+
+  function fetchExistingUniversities() {
+    const course = $('#courseSelect').val();
+    const specialization = $('#specializationSelect').val();
+    const exposure = $('#exposureSelect').val();
+    const budget = $('input[name="budget"]:checked').val();
+    const type = $('#typeSelect').val();
+    const abroad = $('#abroadSelect').val();
+
+    if (course && specialization && exposure && budget && type) {
+      const requestData = { course, specialization, exposure, budget, type };
+
+      if (["Abroad", "India"].includes(abroad)) {
+        requestData.abroad = abroad;
+      }
+
+      $.ajax({
+        url: '/admin/suggestions-data',
+        type: 'GET',
+        data: requestData,
+        success: function (data) {
+          updateUniversityOptions(data.selectedUniversities);
+        },
+        error: function () {
+          console.error('Error fetching universities.');
+        },
+      });
+    }
+  }
+
+  $('#courseSelect, #specializationSelect, #exposureSelect, #typeSelect, #abroadSelect, #budgetWrapper').change(function () {
+    fetchExistingUniversities();
+  });
+
+  function updateUniversityOptions(selectedUniversities) {
+    const universitySelect = $('#universitySelect');
+    universitySelect.val(null).trigger('change');
+    selectedUniversities.forEach(university => {
+      const option = universitySelect.find(`option[value="${university}"]`);
+      if (option.length) {
+        option.prop('selected', true);
+      } else {
+        universitySelect.append(new Option(university, university, true, true));
+      }
+    });
+    universitySelect.trigger('change');
+  }
+
+  function submitSuggestion() {
+    const formData = $('#suggestionForm').serialize();
+    $.ajax({
+      url: '/admin/suggestions',
+      type: 'POST',
+      data: formData,
+      success: function (response) {
+        alert(response.message);
+        location.reload();
+      },
+      error: function (response) {
+        alert(response.responseJSON.error || 'An error occurred.');
+      },
+    });
+  }
+});
+</script>
+
+</body>
+</html>

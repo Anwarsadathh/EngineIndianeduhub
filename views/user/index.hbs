@@ -1,0 +1,388 @@
+
+    <!-- modal -->
+    <div class="graybg">
+      <div>
+        <img src="/images/checked.png" alt="success" style="font-size: 20px;">
+        <span class="title">Congratulations your university suggestion form is submitted.</span>
+        <span class="content">Within the next half hour, you will receive a University Suggestion Report via WhatsApp and email. The report will be prepared by our certified Mentors and Researchers.</span>
+        <span class="content">To learn more about our services, please <a href="https://indianeduhub.in/end-to-end-service/">click here</a></span>
+      </div>
+    </div>
+  <!-- alert -->
+    <!-- Header -->
+    <header class="fixed-top">
+      <div class="container">
+          <!-- Logo on left -->
+          <div class="headerContent">
+            <a href="https://indianeduhub.in" class="logoWrapper">
+              <img class="header-logo" src="./images/ieh-logo.png" alt="Logo">
+            </a>
+            <div href="https://suggest.indianeduhub.in" class="suggestDiv">
+              <i class="fas fa-lightbulb"></i>
+              <span>Suggest me a University</span>
+            </div>
+          </div>
+      </div>
+    </header>
+    <!-- Two Column Layout -->
+    <div class="container main">
+      <div class="row">
+        <!-- Right Column -->
+        <div class="col order-md-2 right-col">
+          <!-- Form container -->
+          <form class="formWrapper">
+            <div class="alert alert-danger" role="alert" id="alert"></div>
+            <span class="heading">Suggest me an Online/Distance University</span>
+          
+            <!-- Step Progress -->
+            <div class="stepProgress">
+              <div class="circle yellow">
+                <span>1</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>2</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>3</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>4</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>5</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>6</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>7</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>8</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>9</span>
+              </div>
+               
+            </div>
+           
+            <!-- Form -->
+            <div class="form">
+                        <input type="text" class="form-control" id="ReferredBy" name="ReferredBy" value="{{student.studentid}}" disabled hidden>
+             
+                               <input type="hidden" name="utm_source" value="{{utm_source}}">
+    <input type="hidden" name="utm_medium" value="{{utm_medium}}">
+    <input type="hidden" name="utm_campaign" value="{{utm_campaign}}">
+    <input type="hidden" name="utm_content" value="{{utm_content}}">
+    <input type="hidden" name="utm_id" value="{{utm_id}}">
+    <input type="hidden" name="utm_term" value="{{utm_term}}">
+              <!-- Question 1 -->
+             <div id="q1" class="steps">
+  <span class="question">What course are you interested in pursuing?</span>
+  <div class="answerWrapper1">
+    {{#each availableCourses}}
+    <div class="answer">
+      <input type="radio" value="{{this}}" name="course" required aria-required="true">
+      <label for="{{this}}">{{this}}</label>
+    </div>
+    {{/each}}
+  </div>
+
+  {{#each specializationMap}}
+  <select name="{{@key}}-Spec" class="form-select" aria-required="true" hidden>
+    <option value="">- Select {{@key}} specialization -</option>
+    {{#each this}}
+    <option value="{{this}}">{{this}}</option>
+    {{/each}}
+  </select>
+  {{/each}}
+
+  <div class="nav">
+    <button type="button" class="next">&#8594;</button>
+  </div>
+</div>
+<div id="q2" class="steps" hidden>
+  <span class="question">What is your current status?</span>
+  <div class="answerWrapper2">
+    <div class="answer">
+      <input type="radio" value="Fresher" name="status" aria-required="true">
+      <label for="Fresher">Fresher</label>
+    </div>
+    <div class="answer">
+      <input type="radio" value="Working Professional" name="status" aria-required="true">
+      <label for="Working Professional">Working Professional</label>
+    </div>
+  </div>
+  <div class="answerWrapper2-1" hidden>
+    <input type="text" name="expSalary" placeholder="Expected Salary" aria-required="true">
+  </div>
+  <div class="answerWrapper2-1" hidden>
+    <input type="text" name="currDomian" placeholder="Current Domain" aria-required="true">
+    <input type="text" name="currSalary" placeholder="Current Salary" aria-required="true">
+    <input type="text" name="experience" placeholder="Years of Experience" aria-required="true">
+  </div>
+  <!-- Navigation -->
+  <div class="nav">
+    <button type="button" class="prev">&#8592;</button>
+    <button type="button" class="next">&#8594;</button>
+  </div>
+</div>
+
+
+              <!-- Question 3 -->
+              <div id="q3" class="steps" hidden>
+                <span class="question">Where are you seeking employment?</span>
+                <div class="answerWrapper3">
+                  <div class="answer">
+                    <input type="radio" value="Abroad" name="empLocation" aria-required="true">
+                    <label for="Abroad">Abroad</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="India" name="empLocation" aria-required="true">
+                    <label for="India">India</label>
+                  </div>
+                </div>
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev">&#8592;</button>
+                  <button type="button" class="next">&#8594;</button>
+                </div>
+              </div>
+              <!-- Question 4 -->
+              <div id="q4" class="steps" hidden>
+                <span class="question">Which sector are you looking to explore?</span>
+                <div class="answerWrapper4">
+                  <div class="answer">
+                    <input type="radio" value="Govt Sector" name="sector" aria-required="true">
+                    <label for="Govt Sector">Govt Sector</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="Private Sector" name="sector" aria-required="true">
+                    <label for="Private Sector">Private Sector</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="Entrepreneur" name="sector" aria-required="true">
+                    <label for="Entrepreneur">Entrepreneur</label>
+                  </div>
+                </div>
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev">&#8592;</button>
+                  <button type="button" class="next">&#8594;</button>
+                </div>
+              </div>
+              <!-- Question 5 -->
+              <div id="q5" class="steps" hidden>
+                <div class="answerWrapper5">
+                  <input type="text" name="prevUniversity" placeholder="Previous University" aria-required="true">
+                </div>
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev">&#8592;</button>
+                  <button type="button" class="next">&#8594;</button>
+                </div>
+              </div>
+
+             <!-- Question 6 -->
+<div id="q6" class="steps" hidden>
+  <div class="answerWrapper6">
+    <input type="text" name="prevQualification" placeholder="Previous Qualification" aria-required="true">
+   
+  </div>
+  <div class="answerWrapper6">
+   <input type="text" name="prevQualificationPercentage" placeholder="Previous Qualification Percentage (%)" aria-required="true">
+  
+  </div>
+  <!-- Navigation -->
+  <div class="nav">
+    <button type="button" class="prev">&#8592;</button>
+    <button type="button" class="next">&#8594;</button>
+  </div>
+</div>
+
+              <!-- Question 7 -->
+              <div id="q7" class="steps" hidden>
+                <span class="question">What matters to you most when selecting a university?</span>
+                <div class="answerWrapper7">
+                  <div class="answer">
+                    <input type="radio" value="High Exposure" name="exposure" aria-required="true">
+                    <label for="High Exposure">Maximum Academic & Corporate exposure</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="Minimal Exposure" name="exposure" aria-required="true">
+                    <label for="Minimal Exposure">Minimum Academic & Corporate Exposure</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="Just Complete Degree" name="exposure" aria-required="true">
+                    <label for="Just Complete a Degree">Just want to complete a degree</label>
+                  </div>
+                </div>
+                <span class="question">Select your budget for university</span>
+                <!-- q7-1 -->
+                <div class="answerWrapper7-1" hidden>
+                  <div class="answer">
+                    <input type="radio" value="1,00,000 - 1,50,000" name="budget1" aria-required="true">
+                    <label for="1,00,000 - 1,50,000">1,00,000 - 1,50,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="1,50,000 - 2,00,000" name="budget1" aria-required="true">
+                    <label for="1,50,000 - 2,00,000">1,50,000 - 2,00,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="2,00,000 - 2,50,000" name="budget1" aria-required="true">
+                    <label for="2,00,000 - 2,50,000">2,00,000 - 2,50,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="Above 2,50,000" name="budget1" aria-required="true">
+                    <label for="Above 2,50,000">Above 2,50,000</label>
+                  </div>
+                </div>
+                <!-- q7-2 -->
+                <div class="answerWrapper7-1" hidden>
+                  <div class="answer">
+                    <input type="radio" value="50,000 - 80,000" name="budget2" aria-required="true">
+                    <label for="50,000 - 80,000">50,000 - 80,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="80,000 - 1,00,000" name="budget2" aria-required="true">
+                    <label for="80,000 - 1,00,000">80,000 - 1,00,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="1,00,000 - 1,20,000" name="budget2" aria-required="true">
+                    <label for="1,00,000 - 1,20,000">1,00,000 - 1,20,000</label>
+                  </div>
+                </div>
+                <!-- q7-3 -->
+                <div class="answerWrapper7-1" hidden>
+                  <div class="answer">
+                    <input type="radio" value="50,000 - 1,00,000" name="budget3" aria-required="true">
+                    <label for="50,000 - 1,00,000">50,000 - 1,00,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="1,00,000 - 1,50,000" name="budget3" aria-required="true">
+                    <label for="1,00,000 - 1,50,000">1,00,000 - 1,50,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="1,50,000 - 2,00,000" name="budget3" aria-required="true">
+                    <label for="1,50,000 - 2,00,000">1,50,000 - 2,00,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="2,00,000 - 2,50,000" name="budget3" aria-required="true">
+                    <label for="2,00,000 - 2,50,000">2,00,000 - 2,50,000</label>
+                  </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev">&#8592;</button>
+                  <button type="button" class="next">&#8594;</button>
+                </div>
+              </div>
+              <!-- Question 8 -->
+              <div id="q8" class="steps" hidden>
+                <div class="answerWrapper8">
+                    <textarea type="text" name="Description" placeholder="Do you want to mention anything specific? Do mention below." aria-required="true"></textarea>
+                </div>
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev">&#8592;</button>
+                  <button type="button" class="next">&#8594;</button>
+                </div>
+              </div>
+              <!-- Question 9 -->
+              <div id="q9" class="steps" hidden>
+                <div class="answerWrapper9">
+                  <div class="answer">
+                    <input type="text" class="req" name="name" placeholder="Name" aria-required="true">
+                  </div>
+                  <div class="answer">
+                    <input type="text" class="req" name="email" placeholder="Email" aria-required="true">
+                  </div>
+                  <div class="answer">
+                    <input type="text" class="req" name="whatsapp" placeholder="Whatsapp Number" aria-required="true">
+                  </div>
+                  <div class="answer">
+                    <input type="text" name="mobile" placeholder="Alternative Number" aria-required="true">
+                  </div>
+      <select id="stateSelect" name="State" class="form-control select2">
+                    <option value="" disabled selected hidden>Select State*</option>
+                </select>
+
+                     <select id="citySelect" name="City" class="form-control select2">
+                    <option value="" disabled selected hidden>Select City*</option>
+                </select>
+              
+                  
+                </div>
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev last">&#8592;</button>
+                  <button type="button" class="submit" name="submit">Submit</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <!-- OR -->
+          <div class="orWrapper">
+            <span>OR</span>
+          </div>
+          <!-- Video session -->
+          <div class="mentorWrapper">
+            <span>Talk with a mentor</span>
+            <a href="https://indianeduhub.in/book-video-session/">
+            <div>
+              <span>Book Video Session</span>
+            </div>
+          </a>
+          </div>
+        </div>
+        <!-- Left Column -->
+        <div class="col-md-6">
+            <!-- Left column content here -->
+            <h3 class="left-col-headerText">Online & Distance University Selection Made Easy</h3>
+
+            <div class="left-col-container">
+                <p class="left-col-step">Step 1</p>
+                <p class="left-col-title">Questionnaire or Video Session</p>
+                <p class="left-col-desc"><strong>Questionnaire:</strong> Fill accurate details based on your interest and background.</p>
+                <p class="left-col-desc"><strong>Video Session:</strong> Mentor will help you in clarification and deep understanding of your interest and background.</p>
+            </div>
+
+            <div class="left-col-container">
+                <p class="left-col-step">Step 2</p>
+                <p class="left-col-title">Finding Suitable Online/Distance University</p>
+                <p class="left-col-desc">Based on your answer, our mentors and research team will find the best and suitable online/distance university for the candidate.</p>
+            </div>
+
+            <div class="left-col-container">
+                <p class="left-col-step">Step 3</p>
+                <p class="left-col-title">Online/Distance University Suggestions</p>
+                <p class="left-col-desc">Mentors will get in touch with the candidate regarding the best and suitable online/distance university. Will discuss the pros and cons of the options which the candidate has, and will be submitting a report to the candidate.</p>
+            </div>
+
+            <div class="left-col-container">
+                <p class="left-col-step">Step 4</p>
+                <p class="left-col-title">University Registration</p>
+                <p class="left-col-desc">Based on the report candidates will be able to select the best and suitable online/distance university for them. Then comes Online/Distance University Registration.</p>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!--  -->
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+           <p class="mb-0">&copy; All rights reserved by Indian Edu Hub Private Limited</p>
+
+        </div>
+    </footer>
+

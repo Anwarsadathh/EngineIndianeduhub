@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Form</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM4ZZfv1R9El4ZCfLkjpOA3gSWhT4CqzRn9V7d5" crossorigin="anonymous">
+    
+    <style>
+        /* General Body Style */
+        body {
+            background-color: #e1f7e7;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        /* Form Container */
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .form-container h2 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Form Elements */
+        .form-group label {
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 1px solid #007bff;
+            padding: 12px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #17a2b8;
+            box-shadow: 0 0 5px rgba(23, 162, 184, 0.5);
+        }
+
+        /* Buttons */
+        .btn-primary, .btn-danger, .add-course-btn, .add-spec-btn {
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .add-course-btn, .add-spec-btn {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .remove-btn {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        /* Course and Specialization Groups */
+        .course-group, .specialization-group {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #28a745;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .specialization-group {
+            margin-left: 30px;
+        }
+
+        /* Plus and Minus Icons */
+        .add-spec-btn i, .remove-btn i {
+            margin-right: 5px;
+        }
+
+        /* Add Hover Effects */
+        .btn-primary:hover, .btn-danger:hover, .add-course-btn:hover, .add-spec-btn:hover {
+            opacity: 0.9;
+            transition: 0.3s;
+        }
+        
+        /* Data Table Styling */
+        #engineDataTable {
+            width: 100%;
+            margin-top: 20px;
+            background-color: #ffffff;
+            color: #333;
+            font-size: 14px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        #engineDataTable thead {
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        #engineDataTable th, #engineDataTable td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #engineDataTable tr:nth-child(even) td {
+            background-color: #f8f8f8;
+        }
+
+        #engineDataTable tr:hover td {
+            background-color: #e0f7fa;
+            color: #333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #engineDataTable th, #engineDataTable td {
+                padding: 10px;
+                font-size: 12px;
+            }
+        }
+
+        /* Styling for courses (first-level list items) */
+        .courses-list > li {
+            list-style-type: disc;
+            color: #007bff;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* Styling for specializations (second-level list items) */
+        .courses-list .specialization-list > li {
+            list-style-type: circle;
+            color: #28a745;
+            margin-left: 20px;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="form-container">
+        <h2>University Information</h2>
+        <form id="universityForm" enctype="multipart/form-data">
+            <!-- University Name -->
+            <div class="form-group mb-3">
+                <label for="universityName">University Name:</label>
+                <input type="text" id="universityName" name="universityName" class="form-control" placeholder="Enter university name" required>
+            </div>
+
+            <!-- Image Upload Field -->
+            <div class="form-group mb-3">
+                <label for="image">Upload Image:</label>
+                <input type="file" id="image" name="image" class="form-control" accept="image/*">
+            </div>
+
+            <!-- Courses Container -->
+            <div id="coursesContainer">
+                <div class="course-group">
+                    <div class="form-group mb-3">
+                        <label>Course:</label>
+                        <input type="text" name="courses[0][courseName]" class="form-control" placeholder="Enter course name" required>
+                    </div>
+                    <div class="specializationsContainer">
+                        <div class="specialization-group">
+                            <label>Specialization:</label>
+                            <input type="text" name="courses[0][specializations][]" class="form-control" placeholder="Enter specialization" required>
+                            <button type="button" class="add-spec-btn btn btn-sm" onclick="addSpecialization(this, 0)">
+                                <i class="fas fa-plus-circle"></i> Add Specialization
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="remove-btn btn btn-sm" onclick="removeCourse(this)">
+                        <i class="fas fa-minus-circle"></i> Remove Course
+                    </button>
+                </div>
+            </div>
+            <button type="button" class="add-course-btn btn btn-success mt-2" onclick="addCourse()">
+                <i class="fas fa-plus-circle"></i> Add Course
+            </button>
+
+            <!-- Other Fields -->
+            <div class="form-group mt-3">
+                <label for="estYear">Est Year:</label>
+                <input type="number" id="estYear" name="estYear" class="form-control" placeholder="Enter establishment year" required>
+            </div>
+            <div class="form-group">
+                <label for="approvedBy">Approved By:</label>
+                <input type="text" id="approvedBy" name="approvedBy" class="form-control" placeholder="Enter approved by" required>
+            </div>
+            <div class="form-group">
+                <label for="type">Type:</label>
+                <input type="text" id="type" name="type" class="form-control" placeholder="Enter university type" required>
+            </div>
+            <div class="form-group">
+                <label for="naacGrade">NAAC Grade:</label>
+                <input type="text" id="naacGrade" name="naacGrade" class="form-control" placeholder="Enter NAAC grade" required>
+            </div>
+            <div class="form-group">
+                <label for="rankedBy">Ranked By:</label>
+                <input type="text" id="rankedBy" name="rankedBy" class="form-control" placeholder="Enter ranking organization" required>
+            </div>
+            <div class="form-group">
+                <label for="rankingNum">Ranking Number:</label>
+                <input type="number" id="rankingNum" name="rankingNum" class="form-control" placeholder="Enter ranking number" required>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-submit mt-4 text-center">
+                <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<h1 class="mt-5 text-center">University Details</h1>
+<table id="engineDataTable" class="display">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>University Name</th>
+            <th>Established Year</th>
+            <th>Approved By</th>
+            <th>Type</th>
+            <th>NAAC Grade</th>
+            <th>Ranked By</th>
+            <th>Ranking No.</th>
+            <th>Courses & Specializations</th>
+            <th>Created At</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each engineData}}
+        <tr>
+            <td>
+                {{#if this.imagePath}}
+                <img src="/{{this.imagePath}}" alt="University Image" class="img-thumbnail" width="50">
+                {{else}}
+                No Image
+                {{/if}}
+            </td>
+            <td>{{this.universityName}}</td>
+            <td>{{this.estYear}}</td>
+            <td>{{this.approvedBy}}</td>
+            <td>{{this.type}}</td>
+            <td>{{this.naacGrade}}</td>
+            <td>{{this.rankedBy}}</td>
+            <td>{{this.rankingNum}}</td>
+            <td>
+                <ul class="courses-list">
+                    {{#each this.courses}}
+                    <li>
+                        <strong>{{this.courseName}}</strong>
+                        <ul class="specialization-list">
+                            {{#each this.specializations}}
+                            <li>{{this}}</li>
+                            {{/each}}
+                        </ul>
+                    </li>
+                    {{/each}}
+                </ul>
+            </td>
+            <td>{{this.createdAt}}</td>
+           <!-- Update the action button in your table with an edit button -->
+<td>
+    <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='/editUniversity?id={{this._id}}'">
+        <i class="fas fa-edit"></i> Edit
+    </button>
+</td>
+
+
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#engineDataTable').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            responsive: true,
+            columnDefs: [
+                { orderable: false, targets: [6, 8, 10] }
+            ]
+        });
+    });
+
+    let courseIndex = 0;
+
+    function addCourse() {
+        courseIndex++;
+        const courseHTML = `
+            <div class="course-group">
+                <div class="form-group mb-3">
+                    <label>Course:</label>
+                    <input type="text" name="courses[${courseIndex}][courseName]" class="form-control" placeholder="Enter course name" required>
+                </div>
+                <div class="specializationsContainer">
+                    <div class="specialization-group">
+                        <label>Specialization:</label>
+                        <input type="text" name="courses[${courseIndex}][specializations][]" class="form-control" placeholder="Enter specialization" required>
+                        <button type="button" class="add-spec-btn btn btn-sm" onclick="addSpecialization(this, ${courseIndex})">
+                            <i class="fas fa-plus-circle"></i> Add Specialization
+                        </button>
+                    </div>
+                </div>
+                <button type="button" class="remove-btn btn btn-sm" onclick="removeCourse(this)">
+                    <i class="fas fa-minus-circle"></i> Remove Course
+                </button>
+            </div>`;
+        $('#coursesContainer').append(courseHTML);
+    }
+
+    function addSpecialization(button, index) {
+        $(button).parent().after(`
+            <div class="specialization-group">
+                <input type="text" name="courses[${index}][specializations][]" class="form-control" placeholder="Enter specialization" required>
+                <button type="button" class="remove-btn btn btn-sm" onclick="removeSpecialization(this)">
+                    <i class="fas fa-minus-circle"></i> Remove Specialization
+                </button>
+            </div>
+        `);
+    }
+
+    function removeCourse(button) {
+        $(button).closest('.course-group').remove();
+    }
+
+    function removeSpecialization(button) {
+        $(button).parent().remove();
+    }
+
+    function submitForm() {
+        const formData = new FormData(document.getElementById('universityForm'));
+        $.ajax({
+            url: "/submitUniversityForm",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                alert(response.message);
+            },
+            error: function(error) {
+                alert("Error submitting form: " + error.responseJSON.message);
+            }
+        });
+    }
+</script>
+</body>
+</html>
