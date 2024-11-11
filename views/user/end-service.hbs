@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>End-to-End Services - Indian Edu Hub</title>
+      <style>
+        :root {
+            --primary: #232F65;
+            --secondary: #EDCF2E;
+            --accent: #00b894;
+            --bg-light: #f5f7fa;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-light) 0%, #c3cfe2 100%);
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--primary);
+            padding: 100px 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://indianeduhub.in/wp-content/uploads/logos-01-e1673265739692.png');
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5em;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .section-header p {
+            color: var(--text-light);
+            font-size: 1.1em;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .service-icon {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .service-card h3 {
+            color: var(--primary);
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 40px 0;
+            background: var(--bg-light);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            padding: 20px;
+        }
+/* Animation Keyframes */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shine {
+    0% { background-position: -100px; }
+    100% { background-position: 300px; }
+}
+
+@keyframes continuousShine {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    50% { box-shadow: 0 10px 30px rgba(237, 207, 46, 0.3); }
+    100% { box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+}
+
+@keyframes badgePulse {
+    0% { transform: rotate(45deg) scale(1); }
+    50% { transform: rotate(45deg) scale(1.05); }
+    100% { transform: rotate(45deg) scale(1); }
+}
+
+/* Update Pricing Card Styles */
+.pricing-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.pricing-card:hover {
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.pricing-card.popular {
+    border: 3px solid var(--secondary);
+    animation: float 6s ease-in-out infinite;
+    box-shadow: 0 0 30px rgba(237, 207, 46, 0.2);
+}
+
+.pricing-card.popular::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 20%,
+        rgba(237, 207, 46, 0.1) 35%,
+        rgba(237, 207, 46, 0.2) 50%,
+        rgba(237, 207, 46, 0.1) 65%,
+        transparent 80%
+    );
+    animation: continuousShine 3s linear infinite;
+    pointer-events: none;
+}
+
+.pricing-card.selected {
+    animation: pulse 2s ease-in-out infinite;
+    border: 3px solid var(--secondary);
+    box-shadow: 0 0 30px rgba(237, 207, 46, 0.3);
+}
+
+/* Price Animation */
+.price {
+    position: relative;
+    overflow: hidden;
+}
+
+.price::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, 
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.8) 50%,
+        rgba(255,255,255,0) 100%);
+    background-size: 200px 100%;
+    animation: shine 3s infinite linear;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.pricing-card:hover .price::after,
+.pricing-card.popular .price::after {
+    opacity: 1;
+}
+
+/* Popular Badge Animation */
+.popular-badge {
+    position: absolute;
+    top: 15px;
+    right: -50px;
+    background: var(--secondary);
+    color: var(--primary);
+    padding: 8px 40px;
+    transform: rotate(45deg);
+    font-weight: bold;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 150px;
+    text-align: center;
+    animation: badgePulse 2s infinite ease-in-out;
+    z-index: 2;
+}
+/* Add these new styles */
+.price-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.original-price {
+    font-size: 1.4em;
+    color: var(--text-light);
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+
+.pricing-card.popular .price-container {
+    position: relative;
+}
+
+.pricing-card.popular .price-container::after {
+    content: 'Save 66.69%';
+    position: absolute;
+    top: -5px;
+    right: 15px;
+    background: var(--accent);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.7em;
+    font-weight: bold;
+    transform: rotate(12deg);
+}
+
+@media (max-width: 768px) {
+    .original-price {
+        font-size: 0.8em !important;
+    }
+    
+  
+    
+    .pricing-card.popular .price-container::after {
+        top: -15px;
+        right: -10px;
+        font-size: 0.6em;
+        padding: 3px 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .original-price {
+        font-size: 0.7em !important;
+    }
+    
+   
+}
+/* Button Animation */
+.btn {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: var(--secondary);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.6s ease;
+    z-index: -1;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn:hover {
+    color: var(--primary);
+    border-color: var(--secondary);
+}
+
+/* Features Animation */
+.features li, .not-included li {
+    transition: all 0.3s ease;
+}
+
+.features li:hover, .not-included li:hover {
+    transform: translateX(5px);
+    color: var(--primary);
+}
+
+/* Selection Indicator */
+.pricing-card .check-mark {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 25px;
+    height: 25px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+    z-index: 3;
+}
+
+.pricing-card.selected .check-mark {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.pricing-card.selected .check-mark::before {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--accent);
+    font-size: 14px;
+}
+
+/* Rest of the animations remain the same */
+.service-card {
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.service-card:hover {
+    transform: translateY(-10px) scale(1.03);
+}
+
+.service-icon {
+    transition: all 0.3s ease;
+}
+
+.service-card:hover .service-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.stat-card {
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.stat-number {
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-number {
+    transform: scale(1.1);
+    color: var(--accent);
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    .pricing-card:hover {
+        transform: translateY(-5px) scale(1.01);
+    }
+    
+    .btn::before {
+        display: none;
+    }
+    
+    .features li:hover, .not-included li:hover {
+        transform: translateX(2px);
+    }
+    
+    .service-card:hover {
+        transform: translateY(-5px) scale(1.01);
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .popular-badge {
+        top: 10px;
+        right: -45px;
+        padding: 4px 30px;
+        font-size: 0.65em;
+        width: 130px;
+    }
+}
+      .pricing-card {
+    background: white;
+    border-radius: 15px;
+    padding: 15px 10px;  /* Reduced padding */
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    border: 2px solid rgba(0, 0, 0, 0.1) ; /* Light gray border */
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+}
+
+.pricing-card.popular {
+    border: 2px solid var(--primary);  /* Thinner border */
+}
+
+.popular-badge {
+    position: absolute;
+    top: 20px;  /* Adjusted position */
+    right: -35px;
+    background: var(--secondary);
+    color: var(--primary);
+    padding: 5px 30px;  /* Smaller padding */
+    transform: rotate(45deg);
+    font-weight: bold;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    font-size: 0.8em;  /* Smaller font */
+    font-family:'Times New Roman', Times, serif !important ;
+}
+  
+.package-name {
+    font-size: 1.4em;  /* Smaller font */
+    color: var(--primary);
+    margin-bottom: 10px;  /* Less margin */
+}
+
+.price {
+    font-size: 2.2em;  /* Smaller font */
+    color: var(--accent);
+    font-weight: bold;
+    margin: 15px 0;  /* Less margin */
+    padding: 0px 20px 0px 20px;
+    border-radius: 10px;
+}
+
+.duration {
+    font-size: 0.85em;  /* Smaller font */
+    margin-bottom: 15px;  /* Less margin */
+}
+
+.features li, .not-included li {
+    padding: 4px 0 ;  /* Less padding */
+    font-size: 0.9em;  /* Smaller font */
+}
+
+
+
+
+        .duration {
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .features {
+            list-style: none;
+            margin: 30px 0 0 20px !important;
+            text-align: left;
+        }
+
+        .features li {
+            padding: 1px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .features li::before {
+            content: "✓";
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .not-included {
+            list-style: none;
+            margin: 5px 0 0 20px !important;
+            opacity: 0.7;
+            text-align: left;
+        }
+
+        .not-included li {
+            padding: 1px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .not-included li::before {
+            content: "×";
+            color: #ff7675;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+             padding: 10px 25px;  /* Smaller padding */
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            font-size: 0.9em;  /* Smaller font */
+            border-radius: 10px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 80%;
+           margin-top: 15px;  /* Less margin */
+        }
+
+        .btn:hover {
+            background: #2c3b7a;
+            transform: translateY(-2px);
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-card {
+            padding: 30px;
+            background: var(--bg-light);
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+   .pricing-card p {
+        font-size: 0.9em;
+        margin-bottom: 6px;
+    }
+
+
+    .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 10px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 5px;
+    }
+
+    /* Target the third pricing card */
+    .pricing-grid .pricing-card:last-child {
+        grid-column: 1 / -1;  /* Span full width */
+        max-width: 280px;     /* Limit width */
+        margin: 0 auto;       /* Center horizontally */
+    }
+}
+
+/* For even smaller screens */
+@media (max-width: 480px) {
+    .pricing-grid {
+        gap: 8px;
+    }
+
+    .pricing-grid .pricing-card:last-child {
+        max-width: 250px;     /* Slightly smaller on mobile */
+    }
+}
+
+/* Optional: Add a visual separator */
+@media (max-width: 768px) {
+    .pricing-grid .pricing-card:last-child {
+        margin-top: 15px;     /* Add some space above the centered card */
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);  /* Stronger shadow for emphasis */
+    }
+}
+     /* Tablet and Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .hero {
+        padding: 60px 20px;
+    }
+
+    .hero h1 {
+        font-size: 2em;
+    }
+
+    .hero p {
+        font-size: 0.9em;
+    }
+
+    .section-header {
+        margin-bottom: 40px;
+    }
+
+    .section-header h2 {
+        font-size: 1.8em;
+    }
+
+    .section-header p {
+        font-size: 0.9em;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 0 10px;
+    }
+
+    .service-card {
+        padding: 20px 15px;
+    }
+
+    .service-icon {
+        font-size: 2em;
+        margin-bottom: 15px;
+    }
+
+    .service-card h3 {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+
+    .service-card p {
+        font-size: 0.8em;
+    }
+
+    /* Updated Pricing Styles for Tablet */
+    .pricing {
+        padding: 40px 0;
+    }
+
+    .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 5px;
+    }
+
+    .pricing-card {
+        padding: 15px 12px;
+        border-radius: 15px;
+    }
+
+    .package-name {
+        font-size: 1.1em;
+        margin-bottom: 8px;
+    }
+
+    .price {
+        font-size: 1em !important;
+        margin: 5px 0 !important;
+    }
+
+    .duration {
+        font-size: 0.7em;
+        margin-bottom: 10px;
+    }
+
+    .pricing-card p {
+        font-size: 0.75em;
+        margin-bottom: 8px;
+    }
+
+    .features, .not-included {
+        margin: 5px 0;
+    }
+
+    .features li, .not-included li {
+        font-size: 0.7em;
+        padding: 4px 0;
+        gap: 5px;
+    }
+  .features {
+            margin: 10px 0 0 10px !important;
+        }
+        .not-included {
+            margin: 5px 0 0 10px !important;
+         
+        }
+    .popular-badge {
+        top: 12px;
+        right: -45px;
+        padding: 4px 30px;
+        font-size: 0.65em;
+        width: 130px;
+    }
+    .btn {
+        padding: 8px 15px;
+        font-size: 0.75em;
+        margin-top: 10px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .stat-number {
+        font-size: 2em;
+    }
+
+    .stat-card p {
+        font-size: 0.8em;
+    }
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.8em;
+    }
+
+    .hero p {
+        font-size: 0.85em;
+    }
+
+    .section-header h2 {
+        font-size: 1.5em;
+    }
+
+    .service-card {
+        padding: 15px 12px;
+    }
+
+    .service-icon {
+        font-size: 1.8em;
+    }
+
+    /* Updated Pricing Styles for Mobile */
+    .pricing-grid {
+        gap: 8px;
+        padding: 3px;
+    }
+
+    .pricing-card {
+        padding: 12px 8px;
+        border-radius: 12px;
+    }
+
+    .package-name {
+        font-size: 1em;
+        margin-bottom: 6px;
+    }
+
+    .price {
+        font-size: 0.8em !important;
+        margin: 8px 0;
+    }
+
+    .duration {
+        font-size: 0.65em;
+        margin-bottom: 8px;
+    }
+
+    .pricing-card p {
+        font-size: 0.7em;
+        margin-bottom: 6px;
+    }
+
+    .features, .not-included {
+        margin: 5px 0;
+    }
+
+    .features li, .not-included li {
+        font-size: 0.65em;
+        padding: 3px 0;
+    }
+
+   .popular-badge {
+        top: 10px;
+        right: -42px;
+        padding: 3px 25px;
+        font-size: 0.55em;
+        width: 120px;
+        transform: rotate(40deg); /* Slightly adjusted angle */
+    }
+
+    .pricing-card.popular {
+        border-width: 2px;
+        overflow: hidden; /* Ensure the badge doesn't create horizontal scroll */
+    }
+
+    .btn {
+        padding: 6px 12px;
+        font-size: 0.7em;
+        margin-top: 8px;
+    }
+
+    .pricing-card.popular {
+        border-width: 2px;
+    }
+
+    .stats {
+        padding: 40px 0;
+    }
+
+    .stat-card {
+        padding: 20px 15px;
+    }
+}
+
+.text-dark{
+   color: black !important;
+}
+    </style>
+    
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Your career is safe with us</h1>
+            <p>Looking to make a big career move? We're here to help! Our #endtoendservice is designed to provide you with the support and guidance you need to take the next step in your journey, as a big brother Indian Edu Hub is always with you.</p>
+            <a href="#pricing" class="btn">Let's Start</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our End to End Services</h2>
+                <p>Comprehensive support for your educational journey</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🎓</div>
+                    <h3>University Suggestion</h3>
+                    <p>Which is full fill your requirement and growth</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📊</div>
+                    <h3>Detailed Report</h3>
+                    <p>As Per your background, skills, interest</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📝</div>
+                    <h3>Registration Support</h3>
+                    <p>Registration Support Application Registration, Loan Approval</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">💰</div>
+                    <h3>Scholarship Support</h3>
+                    <p>Assured EMI & Scholarship support 3000 to 10000</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🛠️</div>
+                    <h3>Technical Support</h3>
+                    <p>Academic, LMS Support</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📜</div>
+                    <h3>Upskill Certification</h3>
+                    <p>3 months Diploma certificate in your specialised subject</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Pricing Section -->
+<section class="pricing" id="pricing">
+    <div class="container">
+        <div class="section-header">
+            <h2>Choose Your Perfect Plan</h2>
+            <p>Select the package that best suits your learning journey</p>
+        </div>
+        
+        <div class="pricing-grid">
+           <!-- Life Package -->
+<div class="pricing-card">
+    <h2 class="package-name">Lite</h2>
+    <div class="price-container">
+        <div class="original-price">₹999</div>
+        <div class="price">Now @Free</div>
+    </div>
+    <div class="duration">Per Month</div>
+    <p>Perfect for individuals starting their journey</p>
+    <ul class="features">
+      
+        <li>Customised University Suggestion</li>
+        <li>Detailed University Report</li>
+        <li>University Web Portal Access</li>
+        <li>Registration Support</li>
+        <li>EMI Support Available</li>
+        <li>Free Affiliate Opportunity</li>
+    </ul>
+    <ul class="not-included">
+        <li>1-on-1 Mentoring</li>
+        <li>Premium Resources</li>
+        <li>Career Guidance</li>
+    </ul>
+    <button class="btn">Choose</button>
+</div>
+            <!-- Pro Package -->
+            <div class="pricing-card popular">
+                <div class="popular-badge">POPULAR</div>
+                <h2 class="package-name">Pro</h2>
+                <div class="price-container">
+                    <div class="original-price">₹2999</div>
+                    <div class="price">Now @1000</div>
+                </div>
+                <div class="duration">Per Month</div>
+                <p>Ideal for serious learners seeking excellence</p>
+                <ul class="features">
+                    <li>Everything in Lite</li>
+                    <li>1-on-1 Mentoring Sessions</li>
+                    <li>Career Guidance Sessions</li>
+                </ul>
+                <ul class="not-included">
+                    <li>Premium Resources</li>
+                </ul>
+                <button class="btn">Choose</button>
+            </div>
+
+            <!-- Premium Package -->
+            <div class="pricing-card">
+                <h2 class="package-name">Premium</h2>
+                <div class="price-container">
+                    <div class="original-price">₹8999</div>
+                    <div class="price">Now @6999</div>
+                </div>
+                <div class="duration">Per Month</div>
+                <p>Complete package for ultimate success</p>
+                <ul class="features">
+                    <li>Everything in Pro, plus:</li>
+                    <li>Unlimited 1-on-1 Sessions</li>
+                     <li>24/7 Support Service</li>
+        <li>Personal Mentor</li>
+                </ul>
+                <button class="btn">Choose</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{!-- <style>
+
+</style>
+
+  <!-- Pricing Section -->
+<section class="pricing" id="pricing">
+    <div class="container">
+        <div class="section-header">
+            <h2>Choose Your Perfect Plan</h2>
+            <p>Select the package that best suits your learning journey</p>
+        </div>
+        
+        <div class="pricing-grid">
+            <!-- Life Package -->
+            <div class="pricing-card">
+                <h2 class="package-name">Lite</h2>
+           <div class="price"><s style="color:#c4c3c3; text-decoration-color:#969696;">₹999</s></div>
+            <div class="price"> Now@free</div>
+            <div class="prices"> </div>
+                <div class="duration">now <b class="text-dark">@free</b></div>
+                <p>Perfect for individuals starting their journey</p>
+                <ul class="features">
+                    <li>24/7 Support Service</li>
+                    <li>Personal Mentor</li>
+               
+                </ul>
+                <ul class="not-included">
+                    <li>1-on-1 Mentoring</li>
+                    <li>Premium Resources</li>
+                    <li>Career Guidance</li>
+                </ul>
+                <button class="btn">Choose</button>
+            </div>
+
+            <!-- Pro Package -->
+            <div class="pricing-card popular">
+                <div class="popular-badge">POPULAR</div>
+                <h2 class="package-name">Pro</h2>
+                <div class="price">₹2999</div>
+                <div class="duration">Per Month</div>
+                <p>Ideal for serious learners seeking excellence</p>
+                <ul class="features">
+                    <li>Everything in Life, plus:</li>
+                    <li>1-on-1 Mentoring Sessions</li>
+              
+                    <li>Career Guidance Sessions</li>
+                </ul>
+                <ul class="not-included">
+                    <li>Premium Resources</li>
+                </ul>
+                <button class="btn">Now @1000</button>
+            </div>
+
+            <!-- Premium Package -->
+            <div class="pricing-card">
+                <h2 class="package-name">Premium</h2>
+                <div class="price">₹8999</div>
+                <div class="duration">Per Month</div>
+                <p>Complete package for ultimate success</p>
+                <ul class="features">
+                    <li>Everything in Pro, plus:</li>
+                    <li>Unlimited 1-on-1 Sessions</li>
+                    <li>Premium Course Access</li>
+                
+                </ul>
+                <button class="btn">Now @7100</button>
+            </div>
+        </div>
+    </div>
+</section> --}}
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">5000+</div>
+                    <p>Successful Alumni</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1st</div>
+                    <p>Suggestion Platform</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100+</div>
+                    <p>Expert Mentors</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1st</div>
+                    <p>Edu-Hub in India</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add this script at the end of your body tag -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.pricing-card');
+        
+        cards.forEach(card => {
+            // Add checkmark element
+            const checkMark = document.createElement('div');
+            checkMark.className = 'check-mark';
+            card.appendChild(checkMark);
+
+            card.addEventListener('click', function() {
+                // Remove selected class from all cards
+                cards.forEach(c => c.classList.remove('selected'));
+                
+                // Add selected class to clicked card
+                this.classList.add('selected');
+                
+                // Animate the selection
+                this.style.animation = 'pulse 0.5s';
+                setTimeout(() => {
+                    this.style.animation = '';
+                    if(this.classList.contains('selected')) {
+                        this.style.animation = 'pulse 2s infinite';
+                    }
+                }, 500);
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -34,17 +34,50 @@
       box-sizing: border-box;
     }
 
-    /* Form container styling */
-    .form-container {
-      max-width: 800px;
-      width: 100%;
-      padding: 3rem;
-      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-      border-radius: 20px;
-      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-      margin-bottom: 2rem;
-    }
+  /* Basic form container styling */
+.form-container {
+  max-width: 800px;
+  width: 100%;
+  padding: 3rem;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  border-radius: 20px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
 
+/* Moving line styling */
+.form-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, #ff6ec4, #7873f5, #4adeff);
+  animation: moveLine 3s linear infinite;
+}
+
+/* Animation for moving line */
+@keyframes moveLine {
+  0% {
+    top: 0;
+    left: -100%;
+  }
+  50% {
+    top: 0;
+    left: 100%;
+  }
+  50.1% {
+    top: 100%;
+    left: 100%;
+  }
+  100% {
+    top: 100%;
+    left: -100%;
+  }
+}
     /* Table container styling */
     .table-container {
       width: 100%;
@@ -205,7 +238,7 @@
       <!-- New dropdown for selecting A, B, C, based on exposure -->
       <div class="col-md-6 mb-3" id="exposureLevelContainer" style="display: none;">
         <label for="exposureLevelSelect" class="form-label">Select Level</label>
-        <select id="exposureLevelSelect" name="exposureLevel" class="form-select select2" style="width: 200px !important" re>
+        <select id="exposureLevelSelect" name="exposureLevel" class="form-select select2" style="width: 200px !important" required>
           <option value="" disabled selected hidden>Select Level</option>
         </select>
       </div>
@@ -221,6 +254,7 @@
             <option value="" disabled selected hidden>Select Type</option>
             <option value="Govt Sector">Govt Sector</option>
             <option value="Private Sector">Private Sector</option>
+             <option value="Entrepreneur">Entrepreneur</option>
           </select>
         </div>
         <div class="col-md-6">

@@ -12,6 +12,8 @@ const { ObjectId } = require("mongodb");
 const fontkit = require("fontkit");
 const sharp = require("sharp");
 
+const axios = require("axios");
+
 async function getImageBytes(imagePath) {
   if (imagePath.endsWith(".webp")) {
     // Convert .webp to .png
@@ -84,6 +86,223 @@ router.get("/", async (req, res) => {
   }
 });
 
+
+// router.post("/submit-form-sug", async (req, res) => {
+//   const formData = req.body;
+
+//   // Set timestamp
+//   const currentISTTime = new Date().toLocaleString("en-IN", {
+//     timeZone: "Asia/Kolkata",
+//   });
+//   formData.timeStamp = currentISTTime;
+
+//   try {
+//     // Submit form data
+//     const result = await suggestHelper.submitFormDataSug(formData);
+
+//     if (!result.success) {
+//       console.error("Submission Failed:", result.message);
+//       return res.status(400).json({ success: false, message: result.message });
+//     }
+
+//     console.log("Form data stored successfully.");
+//     const documentId = result.insertedId;
+//     const database = getDb();
+//     const suggestionCollection = database.collection("suggest");
+
+//     // Define matching criteria for suggestions
+//     const matchCriteria = {
+//       course: formData.course,
+//       specialization: formData.specialization,
+//       exposure: formData.exposure,
+//       abroad: formData.empLocation,
+//       type: formData.sector,
+//       [`budget.${formData.budget}`]: { $exists: true },
+//     };
+
+//     // Find the matching document to retrieve the exposureLevel
+//     const existingDoc = await suggestionCollection.findOne(matchCriteria);
+
+//     if (!existingDoc) {
+//       console.log("No matching document found or no university details.");
+//       return res.status(404).json({
+//         success: false,
+//         message: "No matching document found.",
+//       });
+//     }
+
+//     // Determine additional text based on exposure level
+//     const exposureLevel = existingDoc.exposureLevel;
+//     const exposureTexts = {
+//       AA: "After assessing your background and career aspirations, we’ve identified top universities and entry-level career paths...",
+//       A: "After evaluating your background and aspirations for roles in leading corporate organizations...",
+//       B: "After assessing your professional background and career goals, we’ve identified budget-friendly, fully online universities...",
+//       BB: "After evaluating your background and career aspirations, we’ve identified budget-friendly universities...",
+//       C: "After assessing your professional background and career goals, we’ve identified budget-friendly, fully online universities...",
+//       CC: "After evaluating your background and career aspirations, we’ve identified budget-friendly, fully online universities...",
+//     };
+//     const additionalText = exposureTexts[exposureLevel] || exposureTexts.A;
+
+//     // Query universities within budget options
+//     const engineCollection = database.collection("enginedata");
+//     const universityDetails = await engineCollection
+//       .find({ universityName: { $in: existingDoc.budget[formData.budget] } })
+//       .toArray();
+
+//     // Determine PDF template based on university count
+//     const templateMapping = {
+//       1: "pdf1.pdf",
+//       2: "pdf2.pdf",
+//       3: "pdf3.pdf",
+//       4: "pdf4.pdf",
+//       5: "pdf5.pdf",
+//     };
+//     const templateFileName =
+//       templateMapping[universityDetails.length] || "pdf6.pdf";
+//     const templatePdfPath = path.join(
+//       __dirname,
+//       "../public/pdf",
+//       templateFileName
+//     );
+
+//     // Load PDF template
+//     const templatePdfBytes = fs.readFileSync(templatePdfPath);
+//     const pdfDoc = await PDFDocument.load(templatePdfBytes);
+//     pdfDoc.registerFontkit(fontkit);
+
+//     // Load custom fonts
+//     const proximaFontPath = path.join(
+//       __dirname,
+//       "../public/fonts/ProximaNova-Regular.ttf"
+//     );
+//     const customFontPath = path.join(
+//       __dirname,
+//       "../public/fonts/Helvetica-Bold-Font.ttf"
+//     );
+//     const proximaFont = await pdfDoc.embedFont(
+//       fs.readFileSync(proximaFontPath)
+//     );
+//     const customFont = await pdfDoc.embedFont(fs.readFileSync(customFontPath));
+
+//     // Modify the first page with personalized text
+//     const firstPage = pdfDoc.getPage(0);
+//     firstPage.drawText(formData.name, {
+//       x: 272,
+//       y: 128,
+//       size: 16,
+//       font: proximaFont,
+//       color: rgb(0.945, 0.796, 0.208),
+//     });
+
+//     // Define footer text
+//     const footerText =
+//       "For more information on university approvals, please visit the Indian government website at https://deb.ugc.ac.in.";
+//     const additionalTextPageIndex = 1;
+//     const additionalTextPage = pdfDoc.getPage(additionalTextPageIndex);
+//     additionalTextPage.drawText(additionalText, {
+//       x: 50,
+//       y: 290,
+//       size: 12,
+//       font: proximaFont,
+//       color: rgb(1, 1, 1),
+//     });
+//     additionalTextPage.drawText(footerText, {
+//       x: 50,
+//       y: 200,
+//       size: 10,
+//       font: proximaFont,
+//       color: rgb(1, 1, 1),
+//     });
+
+//     // Draw university details on the PDF
+//     universityDetails.forEach((uni, index) => {
+//       const page = pdfDoc.getPage(index < 2 ? 1 : 2); // Assign pages based on number of universities
+//       page.drawText(`University: ${uni.universityName}`, {
+//         x: 50,
+//         y: 700 - index * 100,
+//         size: 12,
+//         font: customFont,
+//       });
+//       // Additional university information can be added here
+//     });
+
+//     // Save PDF
+//     const pdfBytes = await pdfDoc.save();
+//     const pdfDir = path.join(__dirname, "../public/pdf");
+//     const pdfFilename = `${formData.name.replace(/ /g, "_")}_Report.pdf`;
+//     const pdfFilePath = path.join(pdfDir, pdfFilename);
+
+//     // Ensure directory exists
+//     if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir, { recursive: true });
+
+//     // Save PDF file
+//     fs.writeFileSync(pdfFilePath, pdfBytes);
+//     const pdfUrl = `https://crm.indianeduhub.in/pdf/${pdfFilename}`;
+
+//     // Update document with PDF link
+//     const clientsCollection = database.collection("dummy");
+//     await clientsCollection.updateOne(
+//       { _id: documentId },
+//       { $set: { pdfLink: pdfUrl } }
+//     );
+
+//     // Prepare data for Interakt API request
+//     const interaktData = {
+//       countryCode: "+91",
+//       phoneNumber: formData.whatsapp,
+//       type: "Template",
+//       callbackData: documentId.toString(),
+//       template: {
+//         name: "positive_auto_msg",
+//         languageCode: "en",
+//         headerValues: [pdfUrl],
+//         bodyValues: [formData.name],
+//         buttonValues: {  },
+//       },
+//     };
+
+//     // Send template message via Interakt API
+//     const apiKey =
+//       "b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=";
+//     const interaktResponse = await axios.post(
+//       "https://api.interakt.ai/v1/public/message/",
+//       interaktData,
+//       {
+//         headers: {
+//           Authorization: `Basic ${apiKey}`,
+//           "Content-Type": "application/json",
+//         },
+//       }
+//     );
+
+//     // Check if Interakt message was sent successfully
+//     if (interaktResponse.data.result) {
+//       console.log("Template message sent successfully:", interaktResponse.data);
+//       return res.json({
+//         success: true,
+//         message: "Form processed and message sent successfully.",
+//         pdfLink: pdfUrl,
+//       });
+//     } else {
+//       console.error("Failed to send template message:", interaktResponse.data);
+//       return res.status(500).json({
+//         success: false,
+//         message: "Form processed but failed to send message.",
+//       });
+//     }
+//   } catch (error) {
+//     console.error(
+//       "Error occurred while processing the form submission:",
+//       error
+//     );
+//     res.status(500).json({
+//       success: false,
+//       message: "An error occurred while processing the form submission.",
+//     });
+//   }
+// });
+
+
 router.post("/submit-form-sug", async (req, res) => {
   const formData = req.body;
 
@@ -120,7 +339,7 @@ router.post("/submit-form-sug", async (req, res) => {
 
     // Find the matching document to retrieve the exposureLevel
     const existingDoc = await suggestionCollection.findOne(matchCriteria);
-
+    console.log(matchCriteria, "s");
     if (existingDoc) {
       // Retrieve the exposureLevel from the existing document
       const exposureLevel = existingDoc.exposureLevel;
@@ -129,24 +348,33 @@ router.post("/submit-form-sug", async (req, res) => {
       let additionalText;
       if (exposureLevel === "AA") {
         additionalText = `
-      After considering your background and desire for opportunities in top corporate organizations within your budget, we have conducted thorough research and identified the best university and career options that align with the current market opportunities and can fulfill your requirements. 
-If you require further assistance or would like to discuss this matter further, please feel free to contact our certified mentors.
-        `;
+    After assessing your background and career aspirations, we’ve identified top universities and entry-level career paths that align with current market opportunities. These options are tailored to help you build essential skills and position yourself for growth in leading corporate organizations, setting a strong foundation for your career.
+  `;
       } else if (exposureLevel === "A") {
         additionalText = `
-        We have conducted thorough research and identified the best university and career options that align with the 
-        current market opportunities and can fulfill your requirements.
-        `;
+    After evaluating your background and aspirations for roles in leading corporate organizations, we’ve identified top universities and career paths that align with current market opportunities. These options are designed to enhance your skills and position you for significant growth in your career, ensuring you stand out in the competitive corporate landscape.
+  `;
       } else if (exposureLevel === "B") {
         additionalText = `
-        After considering your background and desire for opportunities in top corporate organizations within your budget, 
-        we have conducted thorough research and identified the best university.
-        `;
+    After assessing your professional background and career goals, we’ve identified budget-friendly, fully online universities designed for working professionals. These programs allow you to enhance your skills and advance your career in leading corporate organizations while keeping costs manageable.
+  `;
+      } else if (exposureLevel === "BB") {
+        additionalText = `
+    After evaluating your background and career aspirations, we’ve identified budget-friendly universities and entry-level career paths that align with current market opportunities. These options will help you build essential skills and position yourself for growth in leading corporate organizations, all while staying within your financial means.
+  `;
+      } else if (exposureLevel === "C") {
+        additionalText = `
+    After assessing your professional background and career goals, we’ve identified budget-friendly, fully online universities tailored for working professionals seeking Indian government jobs. These programs will help you develop the necessary skills and qualifications while keeping costs manageable, allowing you to prepare effectively for competitive exams and opportunities in the public sector.
+  `;
+      } else if (exposureLevel === "CC") {
+        additionalText = `
+    After evaluating your background and career aspirations, we’ve identified budget-friendly, fully online universities that provide degrees primarily for credentialing purposes. These programs will allow you to obtain the necessary qualifications to showcase on your resume while keeping costs low, ensuring you meet the basic educational requirements for various opportunities.
+  `;
       } else {
         // Default text if exposureLevel does not match any of the expected values
         additionalText = `
-        We have conducted thorough research and identified the best university options that align with the current market opportunities.
-        `;
+    After evaluating your background and aspirations for roles in leading corporate organizations, we’ve identified top universities and career paths that align with current market opportunities. These options are designed to enhance your skills and position you for significant growth in your career, ensuring you stand out in the competitive corporate landscape.
+  `;
       }
 
       // Query universities in budget options
@@ -162,9 +390,6 @@ If you require further assistance or would like to discuss this matter further, 
       else if (universityDetails.length === 4) templateFileName = "pdf4.pdf";
       else if (universityDetails.length === 5) templateFileName = "pdf5.pdf";
       else if (universityDetails.length >= 6) templateFileName = "pdf6.pdf";
-
-
-
 
       const templatePdfPath = path.join(
         __dirname,
@@ -184,7 +409,12 @@ If you require further assistance or would like to discuss this matter further, 
       // Load Proxima Nova font for additional text
       const proximaFontPath = path.join(
         __dirname,
-        "../public/fonts/ProximaNova-Regular.ttf"
+        "../public/fonts/TT Commons Regulars.ttf"
+      );
+
+      const ThinItalic = path.join(
+        __dirname,
+        "../public/fonts/Poppins-Italic.ttf"
       );
       const proximaFontBytes = fs.readFileSync(proximaFontPath);
       const proximaFont = await pdfDoc.embedFont(proximaFontBytes);
@@ -192,20 +422,23 @@ If you require further assistance or would like to discuss this matter further, 
       const customFontBytes = fs.readFileSync(customFontPath);
       const customFont = await pdfDoc.embedFont(customFontBytes);
 
+      const ThinItalics = fs.readFileSync(ThinItalic);
+      const ThinItali = await pdfDoc.embedFont(ThinItalics);
+
       // Draw matched criteria details on the first page
       const firstPage = pdfDoc.getPage(0); // First page
-   
+
       firstPage.drawText(formData.name, {
         x: 272, // Start after "Greetings "
         y: 128,
-        size: 16,
+        size: 18,
         font: proximaFont, // Bold font for name
         color: rgb(0.945, 0.796, 0.208), // Use the specified yellow color
       });
 
       // Define footer text (common for all exposure levels)
-   const footerText =
-     "For more information on university approvals, please visit the Indian government website at https://deb.ugc.ac.in";
+      const footerText =
+        "For more information on university approvals, please visit the Indian government website at https://deb.ugc.ac.in.";
 
       // Determine page index and coordinates for additional text based on the number of universities
       let additionalTextPageIndex;
@@ -242,7 +475,7 @@ If you require further assistance or would like to discuss this matter further, 
         additionalTextPage.drawText(additionalText, {
           x: textPosition.x,
           y: textPosition.y, // Unique y-coordinate for main text
-          size: 12,
+          size: 16,
           font: proximaFont,
           color: rgb(1, 1, 1),
           maxWidth: 500, // Ensure text doesn't go outside the page width
@@ -252,11 +485,11 @@ If you require further assistance or would like to discuss this matter further, 
         // Draw the smaller footer text below the main text
         additionalTextPage.drawText(footerText, {
           x: textPosition.x,
-          y: textPosition.y - 120, // Position below the main text; adjust as necessary
-          size: 10, // Smaller font size
-          font: proximaFont,
+          y: textPosition.y - 100, // Position below the main text; adjust as necessary
+          size: 9, // Smaller font size
+          font: ThinItali,
           color: rgb(1, 1, 1),
-          maxWidth: 500,
+          maxWidth: 600,
           lineHeight: 10,
         });
       }
@@ -281,17 +514,17 @@ If you require further assistance or would like to discuss this matter further, 
       secondPage.drawText("Greetings ", {
         x: 50,
         y: currentYPosition,
-        size: 16,
+        size: 18,
         font: customFont, // Bold font for "Greetings"
         color: rgb(1, 1, 1), // White color
       });
 
-      const nameWidth = customFont.widthOfTextAtSize(`Greetings `, 16); // Calculate width for positioning
+      const nameWidth = customFont.widthOfTextAtSize(`Greetings `, 18); // Calculate width for positioning
 
       secondPage.drawText(`${formData.name},`, {
         x: 50 + nameWidth, // Start after "Greetings "
         y: currentYPosition,
-        size: 16,
+        size: 18,
         font: customFont, // Bold font for name
         color: yellowColor, // Use the specified yellow color
       });
@@ -303,7 +536,7 @@ If you require further assistance or would like to discuss this matter further, 
       const courseInfoLines = wrapText(
         courseInfoText,
         maxLineWidth,
-        12,
+        16,
         proximaFont
       );
 
@@ -327,13 +560,13 @@ If you require further assistance or would like to discuss this matter further, 
           secondPage.drawText(word + " ", {
             x: xPosition,
             y: currentYPosition,
-            size: 12,
+            size: 16,
             font: proximaFont,
             color: textColor,
           });
 
           // Update xPosition for the next word
-          xPosition += proximaFont.widthOfTextAtSize(word + " ", 12);
+          xPosition += proximaFont.widthOfTextAtSize(word + " ", 16);
         });
 
         // Move down to the next line
@@ -482,15 +715,14 @@ If you require further assistance or would like to discuss this matter further, 
         }
       }
 
-    pdfDoc.setTitle("University Recommendations");
-    pdfDoc.setAuthor("Indian Edu Hub");
-    pdfDoc.setSubject("Personalized University and Career Options");
-    pdfDoc.setKeywords(["University Recommendations", "Career Options"]);
-    pdfDoc.setCreationDate(new Date());
-    pdfDoc.setModificationDate(new Date());
+      pdfDoc.setTitle("University Recommendations");
+      pdfDoc.setAuthor("Indian Edu Hub");
+      pdfDoc.setSubject("Personalized University and Career Options");
+      pdfDoc.setKeywords(["University Recommendations", "Career Options"]);
+      pdfDoc.setCreationDate(new Date());
+      pdfDoc.setModificationDate(new Date());
 
-    const pdfBytes = await pdfDoc.save({ useObjectStreams: false });
-
+      const pdfBytes = await pdfDoc.save({ useObjectStreams: false });
 
       // Define file path and generate a unique filename if needed
       const pdfDir = path.join(__dirname, "../public/pdf");
@@ -532,13 +764,74 @@ If you require further assistance or would like to discuss this matter further, 
         { $set: { pdfLink: pdfUrl } }
       );
 
-      // Send the PDF as a downloadable attachment in the response
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader(
-        "Content-Disposition",
-        `attachment; filename="${pdfFilename}"`
-      );
-      res.send(Buffer.from(pdfBytes));
+       try {
+        // Prepare data for Interakt API request
+        const interaktData = {
+          countryCode: "+91",
+          phoneNumber: formData.whatsapp,
+          type: "Template",
+          callbackData: documentId.toString(),
+          template: {
+            name: "positive_auto_msg",
+            languageCode: "en",
+            headerValues: [pdfUrl],
+            bodyValues: [formData.name],
+            buttonValues: {},
+          },
+        };
+
+        // Send template message via Interakt API
+        const apiKey = "b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo="; // Replace with actual API key
+        const interaktResponse = await axios.post(
+          "https://api.interakt.ai/v1/public/message/",
+          interaktData,
+          {
+            headers: {
+              Authorization: `Basic ${apiKey}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // Check if Interakt message was sent successfully
+        if (interaktResponse.data.result) {
+          console.log("Template message sent successfully:", interaktResponse.data);
+          
+          // Send PDF as downloadable attachment and include success message
+          res.setHeader("Content-Type", "application/pdf");
+          res.setHeader(
+            "Content-Disposition",
+            `attachment; filename="${pdfFilename}"`
+          );
+          
+          // Send both the PDF and success message
+          const responseData = {
+            success: true,
+            message: "Form processed and message sent successfully.",
+            pdfLink: pdfUrl,
+          };
+          
+          res.send(Buffer.from(pdfBytes));
+        } else {
+          console.error("Failed to send template message:", interaktResponse.data);
+          // Still send the PDF but indicate message sending failed
+          res.setHeader("Content-Type", "application/pdf");
+          res.setHeader(
+            "Content-Disposition",
+            `attachment; filename="${pdfFilename}"`
+          );
+          res.send(Buffer.from(pdfBytes));
+        }
+      } catch (interaktError) {
+        console.error("Error sending Interakt message:", interaktError);
+        // Send PDF even if Interakt message fails
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader(
+          "Content-Disposition",
+          `attachment; filename="${pdfFilename}"`
+        );
+        res.send(Buffer.from(pdfBytes));
+      }
     } else {
       console.log("No matching document found or no university details.");
       res.status(404).json({
@@ -554,7 +847,6 @@ If you require further assistance or would like to discuss this matter further, 
     });
   }
 });
-
 
 // GET route for engine data
 router.get("/engine", async (req, res) => {
@@ -705,6 +997,18 @@ router.post("/updateUniversity", upload.single("image"), async (req, res) => {
       success: false,
       message: "Internal Server Error: " + error.message,
     });
+  }
+});
+
+
+// GET route for engine data
+router.get("/end-to-end-service", async (req, res) => {
+  try {
+   
+    res.render("user/end-service", { layout: false });
+  } catch (error) {
+    console.error("Error fetching engine data:", error);
+    res.status(500).send("An error occurred while fetching engine data.");
   }
 });
 
