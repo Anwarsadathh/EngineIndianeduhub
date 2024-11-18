@@ -208,23 +208,23 @@
   <div class="form-container">
     <h5><i class="fas fa-graduation-cap"></i> Suggest the Best University for Students</h5>
     <form id="suggestionForm" action="/admin/suggestions" method="post">
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label for="courseSelect" class="form-label">Select Course</label>
-          <select id="courseSelect" name="course" class="form-select select2" required>
-            <option value="">Select a course</option>
-            {{#each availableCourses}}
-            <option value="{{this}}">{{this}}</option>
-            {{/each}}
-          </select>
-        </div>
-        <div class="col-md-6">
-          <label for="specializationSelect" class="form-label">Select Specialization</label>
-          <select id="specializationSelect" name="specialization" class="form-select select2" required>
-            <option value="">Select a specialization</option>
-          </select>
-        </div>
-      </div>
+    <div class="row">
+  <div class="col-md-6">
+    <label for="courseSelect" class="form-label">Select Course</label>
+    <select id="courseSelect" name="course" class="form-select select2" required>
+      <option value="">Select a course</option>
+      {{#each availableCourses}}
+        <option value="{{this}}">{{this}}</option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="col-md-6">
+    <label for="specializationSelect" class="form-label">Select Specialization</label>
+    <select id="specializationSelect" name="specialization" class="form-select select2" required>
+      <option value="">Select a specialization</option>
+    </select>
+  </div>
+</div>
 
       <div class="mb-3">
         <label for="exposureSelect" class="form-label">Select Exposure</label>
@@ -267,15 +267,12 @@
         </div>
       </div>
 
-      <div class="mb-3">
-        <label for="universitySelect" class="form-label">Select Universities</label>
-        <select id="universitySelect" name="university" class="form-select select2" multiple required>
-          <option value="" disabled hidden>Select Universities</option>
-          {{#each engineData}}
-          <option value="{{this.universityName}}">{{this.universityName}}</option>
-          {{/each}}
-        </select>
-      </div>
+   <div class="mb-3">
+  <label for="universitySelect" class="form-label">Available Universities</label>
+  <select id="universitySelect" name="university" class="form-select select2" multiple required>
+    <option value="" disabled>Select Universities</option>
+  </select>
+</div>
 
       <center>
         <div class="d-grid gap-2 col-md-4">
@@ -428,28 +425,101 @@ function showBudgetOptions() {
 }
 
 $(document).ready(function () {
+  // Initialize Select2
   $('.select2').select2();
+  
+  // Get specialization map from server-side data
   const specializationMap = {{{json specializationMap}}};
+  
+  // Store the full university data
+  const allUniversities = {{{json engineData}}};
 
+  // Handle course selection change
   $('#courseSelect').on('change', function() {
     const selectedCourse = $(this).val();
     const specializations = specializationMap[selectedCourse] || [];
+    
+    // Update specialization dropdown
     const specializationSelect = $('#specializationSelect');
     specializationSelect.empty().append('<option value="">Select a specialization</option>');
     specializations.forEach(function(specialization) {
-      specializationSelect.append('<option value="' + specialization + '">' + specialization + '</option>');
+      specializationSelect.append(
+        $('<option>', {
+          value: specialization,
+          text: specialization
+        })
+      );
     });
+
+    // Reset and update university list
+    updateUniversityList();
   });
 
-  $('#courseSelect, #specializationSelect, #exposureSelect').change(function () {
-    fetchExistingUniversities();
+  // Handle specialization selection change
+  $('#specializationSelect').on('change', function() {
+    updateUniversityList();
   });
 
+  // Function to update university list based on selected course and specialization
+  function updateUniversityList() {
+    const selectedCourse = $('#courseSelect').val();
+    const selectedSpecialization = $('#specializationSelect').val();
+    
+    // Get university select element
+    const universitySelect = $('#universitySelect');
+    
+    // Clear current options
+    universitySelect.empty().append('<option value="" disabled hidden>Select Universities</option>');
+
+    // If either course or specialization is not selected, don't filter
+    if (!selectedCourse || !selectedSpecialization) {
+      allUniversities.forEach(function(university) {
+        universitySelect.append(
+          $('<option>', {
+            value: university.universityName,
+            text: university.universityName
+          })
+        );
+      });
+      return;
+    }
+
+    // Filter universities based on selected course and specialization
+    const filteredUniversities = allUniversities.filter(function(university) {
+      return university.courses.some(function(course) {
+        return (
+          course.courseName && 
+          course.courseName.trim() === selectedCourse &&
+          course.specializations &&
+          course.specializations.some(spec => 
+            spec && spec.trim() === selectedSpecialization
+          )
+        );
+      });
+    });
+
+    // Add filtered universities to select
+    filteredUniversities.forEach(function(university) {
+      universitySelect.append(
+        $('<option>', {
+          value: university.universityName,
+          text: university.universityName
+        })
+      );
+    });
+
+    // Refresh Select2 to update the UI
+    universitySelect.trigger('change');
+  }
+
+  // Initialize the university list with all universities
+  updateUniversityList();
+
+  // Handle form submission
   $('#suggestionForm').on('submit', function (e) {
     e.preventDefault();
     submitSuggestion();
   });
-
   function fetchExistingUniversities() {
     const course = $('#courseSelect').val();
     const specialization = $('#specializationSelect').val();

@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>End-to-End Services - Indian Edu Hub</title>
       <style>
+
         :root {
             --primary: #232F65;
             --secondary: #EDCF2E;
@@ -14,6 +16,822 @@
             --text-light: #636e72;
         }
 
+     
+
+
+
+
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: block;
+    opacity: 1;
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    width: 90%;
+    max-width: 1000px;
+    max-height: 90vh;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 20px;
+    overflow-y: auto;
+    transform: translateY(-50px);
+    transition: transform 0.3s ease;
+}
+
+.modal.show .modal-content {
+    transform: translateY(0);
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--primary);
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--bg-light);
+    transition: all 0.3s ease;
+}
+
+.close:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* Get Details Button Styles */
+.get-details-btn {
+    display: inline-block;
+    padding: 8px 20px;
+    background: var(--bg-light);
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9em;
+    border-radius: 10px;
+    font-weight: bold;
+    border: 2px solid var(--primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 80%;
+    margin: 10px 0;
+}
+
+.get-details-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* Modal Service Styles */
+.modal .services {
+    padding: 20px 0;
+}
+
+.modal .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.modal .service-item {
+    background: var(--bg-light);
+    padding: 20px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.modal .service-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        margin: 40px auto;
+        padding: 15px;
+    }
+
+    .modal .services-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .get-details-btn {
+        font-size: 0.8em;
+        padding: 6px 15px;
+    }
+}
+
+/* Stats Section */
+.stats {
+    padding: 40px 0; /* Reduced padding */
+    background: #ffffff; /* Changed to white background */
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Softened shadow for light background */
+    z-index: 1;
+}
+
+/* Background Bubble Animation */
+.stats::before,
+.stats::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    width: 200px;
+    height: 200px;
+    background: rgba(35, 47, 101, 0.05); /* Adjusted for light background */
+    border-radius: 50%;
+    animation: bubble 12s infinite cubic-bezier(0.3, 0.2, 0.4, 1);
+    z-index: -1;
+}
+
+.stats::before {
+    left: 20%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 2s;
+}
+
+.stats::after {
+    left: 70%;
+    width: 120px;
+    height: 120px;
+    animation-delay: 5s;
+}
+
+/* Additional Bubbles */
+.stats .bubble {
+    position: absolute;
+    bottom: -100px;
+    background: rgba(0, 184, 148, 0.05); /* Adjusted for light background */
+    border-radius: 50%;
+    animation: bubble 15s infinite cubic-bezier(0.3, 0.2, 0.4, 1);
+    z-index: -1;
+}
+
+.stats .bubble.bubble-1 {
+    left: 25%;
+    width: 180px;
+    height: 180px;
+    animation-delay: 3s;
+}
+
+.stats .bubble.bubble-2 {
+    left: 50%;
+    width: 130px;
+    height: 130px;
+    animation-delay: 6s;
+}
+
+.stats .bubble.bubble-3 {
+    left: 80%;
+    width: 100px;
+    height: 100px;
+    animation-delay: 8s;
+}
+
+/* Bubble Animation Keyframes */
+@keyframes bubble {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.4;
+    }
+    50% {
+        transform: translateY(-300px) scale(1.2);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-600px) scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Stat Card */
+.stat-card {
+    background: #ffffff;
+    border: 1px solid rgba(35, 47, 101, 0.1); /* Adjusted border color */
+    border-radius: 12px;
+    padding: 20px 15px;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Hover Effects */
+.stat-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    background: #ffffff;
+    border-color: rgba(35, 47, 101, 0.2);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1),
+                0 0 20px rgba(35, 47, 101, 0.1);
+}
+
+/* Shine Effect */
+.stat-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 180%;
+    height: 180%;
+    background: linear-gradient(
+        60deg,
+        transparent 0%,
+        rgba(35, 47, 101, 0.05) 50%,
+        transparent 100%
+    );
+    transform: rotate(60deg);
+    opacity: 0;
+}
+
+.stat-card:hover::after {
+    animation: shine 1.2s infinite;
+}
+
+@keyframes shine {
+    0% {
+        left: -50%;
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        left: 150%;
+        opacity: 0;
+    }
+}
+
+/* Stat Number */
+.stat-number {
+    font-size: 2.2em;
+    font-weight: 700;
+    background: linear-gradient(45deg, #232F65, #1a2340); /* Changed to dark blue gradient */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+}
+
+/* Description Text */
+.stat-card p {
+    color: #232F65; /* Changed to match brand color */
+    font-size: 0.9em;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+/* Floating Icon Effect */
+.stat-card::before {
+    content: '';
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    background: rgba(35, 47, 101, 0.08); /* Adjusted for light background */
+    border-radius: 50%;
+    top: -15px;
+    right: -15px;
+}
+
+.stat-card:hover::before {
+    transform: scale(2.5);
+    opacity: 0;
+}
+
+/* Responsive Design Adjustments */
+@media (max-width: 1024px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .stat-number {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 768px) {
+    .stats {
+        padding: 30px 0;
+    }
+
+    .stat-card {
+        padding: 18px 12px;
+    }
+
+    .stat-number {
+        font-size: 1.8em;
+    }
+
+    .stat-card p {
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
+        padding: 0 5px;
+    }
+
+    .stat-card {
+        padding: 5px 6px !important;
+        border-radius: 10px;
+    }
+
+    .stat-number {
+        font-size: 1em;
+        margin-bottom: 5px;
+    }
+
+    .stat-card p {
+        font-size: 0.65em;
+        margin-top: 6px;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px) scale(1.01);
+    }
+
+    /* Floating Icon Effect */
+    .stat-card::before {
+        width: 35px;
+        height: 35px;
+        top: -10px;
+        right: -10px;
+    }
+}
+
+/* Loading Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stat-card {
+    animation: fadeInUp 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+
+        /* Mobile Tabs Styling */
+.pricing-tabs {
+    display: none;  /* Hidden by default on desktop */
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+/* Option 5 - Rich Style */
+.tab-btn {
+    padding: 8px 15px;
+    margin: 0 5px;
+    border: none;
+    background: white;
+    color: #232F65;
+    border-radius: 8px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    font-weight: 600;
+}
+
+.tab-btn.active {
+    background: #EDCF2E;
+    color:   #232F65;;
+    box-shadow: 0 4px 15px rgba(35, 47, 101, 0.3);
+}
+/* Add these hover effects to any of the above options */
+.tab-btn:hover {
+    transform: translateY(-2px);
+}
+
+.tab-btn.active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(237, 207, 46, 0.4);
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 768px) {
+    .pricing-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+
+    .pricing-grid {
+        display: block;  /* Stack cards */
+    }
+
+    .pricing-card {
+        display: none;  /* Hide all cards by default */
+        max-width: 300px;
+        margin: 0 auto;
+        transform: none !important;  /* Disable hover transform */
+    }
+
+    .pricing-card.active {
+        display: block;  /* Show only active card */
+    }
+
+    /* Adjust card styles for mobile */
+    .pricing-card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .package-name {
+        font-size: 1.2em;
+    }
+
+    .price {
+        font-size: 1.8em;
+    }
+
+    .original-price {
+        font-size: 0.9em;
+    }
+
+    .features li, .not-included li {
+        font-size: 0.8em;
+        padding: 3px 0;
+    }
+
+    .btn {
+        font-size: 0.85em;
+        padding: 8px 20px;
+    }
+}
+
+/* Even smaller screens */
+@media (max-width: 480px) {
+    .tab-btn {
+        padding: 6px 12px;
+        font-size: 0.8em;
+    }
+
+    .pricing-card {
+        max-width: 280px;
+        padding: 12px;
+    }
+
+    .package-name {
+        font-size: 1.1em;
+    }
+
+    .price {
+        font-size: 1.6em;
+    }
+
+    .features li, .not-included li {
+        font-size: 0.75em;
+    }
+}
+
+/* Selection Indicator Styles */
+.pricing-card {
+    /* Add to existing pricing-card styles */
+    cursor: pointer;
+}
+
+.pricing-card .check-mark {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 25px;
+    height: 25px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+    z-index: 3;
+    background: white;
+}
+
+.pricing-card.selected .check-mark {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.pricing-card.selected .check-mark::before {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--accent);
+    font-size: 14px;
+}
+
+.pricing-card.selected {
+    animation: pulse 2s ease-in-out infinite;
+    border: 2px solid var(--secondary);
+    box-shadow: 0 0 30px rgba(237, 207, 46, 0.3);
+}
+
+@media (max-width: 768px) {
+    .pricing-card .check-mark {
+        width: 20px;
+        height: 20px;
+    }
+
+    .pricing-card.selected .check-mark::before {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pricing-card .check-mark {
+        width: 18px;
+        height: 18px;
+    }
+
+    .pricing-card.selected .check-mark::before {
+        font-size: 10px;
+    }
+}
+
+.services {
+    padding: 40px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.services-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.top-title {
+    display: inline-block;
+    background: #232F65;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.main-title {
+    font-size: 1.8em;
+    color: #232F65;
+    line-height: 1.3;
+    margin-bottom: 20px;
+}
+
+.price-tag {
+    display: inline-block;
+    background: #FFD700;
+    color: #232F65;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 1em;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.sub-title {
+    color: #232F65;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns for larger screens */
+    gap: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.service-item {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.service-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #FFD700;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.service-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.service-item:hover::before {
+    transform: scaleX(1);
+}
+
+.icon-wrap {
+    width: 50px;
+    height: 50px;
+    background: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+.service-item:hover .icon-wrap {
+    background: #FFD700;
+    transform: scale(1.1);
+}
+
+.icon-wrap img {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+}
+
+.service-item h3 {
+    color: #232F65;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+}
+
+.service-item p, 
+.service-item ul {
+    color: #666;
+    font-size: 0.8em;
+    line-height: 1.4;
+}
+
+.service-item ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.service-item ul li {
+    position: relative;
+    padding-left: 15px;
+    margin-bottom: 5px;
+}
+
+.service-item ul li::before {
+    content: '•';
+    color: #FFD700;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+/* Large screens */
+@media (min-width: 1400px) {
+    .services-grid {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 1400px;
+    }
+}
+
+/* Medium screens */
+@media (max-width: 1200px) {
+    .services-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Tablet screens */
+@media (max-width: 992px) {
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+}
+
+/* Mobile screens */
+@media (max-width: 768px) {
+       
+    }
+    .main-title {
+        font-size: 0.8em;
+    }
+
+    .services-grid {
+        gap: 10px;
+        padding: 0 10px;
+    }
+
+    .service-item {
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    .icon-wrap {
+        width: 40px;
+        height: 40px;
+    }
+
+    .icon-wrap img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .service-item h3 {
+        font-size: 0.8em;
+        margin-bottom: 6px;
+    }
+
+    .service-item p, 
+    .service-item ul {
+        font-size: 0.7em;
+        line-height: 1.3;
+    }
+}
+
+/* Small mobile screens */
+@media (max-width: 480px) {
+    .service-item {
+        padding: 10px;
+    }
+
+    .service-item h3 {
+        font-size: 0.75em;
+    }
+
+    .service-item p, 
+    .service-item ul {
+        font-size: 0.65em;
+    }
+
+    .icon-wrap {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 8px;
+    }
+
+    .icon-wrap img {
+        width: 25px;
+        height: 25px;
+    }
+}
         * {
             margin: 0;
             padding: 0;
@@ -34,60 +852,59 @@
         }
 
         /* Hero Section */
-        .hero {
-            background: var(--primary);
-            padding: 100px 20px;
-            color: white;
-            text-align: center;
-            position: relative;
-        }
+.hero {
+    background: var(--primary);
+    padding: 40px 20px;
+    color: white;
+    text-align: center;
+    margin-top: 48px !important;
+    position: relative;
+}
 
-        .hero::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('https://indianeduhub.in/wp-content/uploads/logos-01-e1673265739692.png');
-            opacity: 0.1;
-            pointer-events: none;
-        }
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://indianeduhub.in/wp-content/uploads/logos-01-e1673265739692.png');
+    background-size: cover; /* Ensures image covers the entire section */
+    background-position: center; /* Centers the image within the section */
+    opacity: 0.1;
+    pointer-events: none;
+}
 
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
-            margin: 0 auto;
-        }
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 
         .hero h1 {
-            font-size: 3.5em;
+            font-size: 2.5em;
             margin-bottom: 20px;
             line-height: 1.2;
         }
 
         .hero p {
-            font-size: 1.2em;
-            margin-bottom: 30px;
+            font-size: 1em;
+            margin-bottom: 10px;
             opacity: 0.9;
         }
 
-        /* Services Section */
-        .services {
-            padding: 80px 0;
-            background: white;
-        }
-
+     
         .section-header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 15px;
         }
 
         .section-header h2 {
-            font-size: 2.5em;
-            color: var(--primary);
-            margin-bottom: 20px;
+            font-size: 1.8em;
+            color: var(--primary) !important;
+            margin-bottom: 15px;
         }
 
         .section-header p {
@@ -95,52 +912,25 @@
             font-size: 1.1em;
         }
 
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            padding: 0 20px;
-        }
 
-        .service-card {
-            background: white;
-            border-radius: 15px;
-            padding: 40px 30px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
+      
 
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-        }
+      
+/* Pricing Section */
+.pricing {
+    padding: 40px 0;
+    background: var(--bg-light);
+}
 
-        .service-icon {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            color: var(--primary);
-        }
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 10px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
 
-        .service-card h3 {
-            color: var(--primary);
-            font-size: 1.5em;
-            margin-bottom: 15px;
-        }
-
-        /* Pricing Section */
-        .pricing {
-            padding: 40px 0;
-            background: var(--bg-light);
-        }
-
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            padding: 20px;
-        }
 /* Animation Keyframes */
 @keyframes float {
     0%, 100% { transform: translateY(0); }
@@ -180,17 +970,21 @@
     cursor: pointer;
     transition: all 0.3s ease;
     background: white;
+    border-radius: 15px;
+    padding: 15px 10px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     position: relative;
     overflow: hidden;
+    border: 2px solid rgba(0, 0, 0, 0.1);
 }
 
 .pricing-card:hover {
-    transform: translateY(-15px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    transform: translateY(-5px);
 }
 
 .pricing-card.popular {
-    border: 3px solid var(--secondary);
+    border: 2px solid var(--primary);
     animation: float 6s ease-in-out infinite;
     box-shadow: 0 0 30px rgba(237, 207, 46, 0.2);
 }
@@ -214,14 +1008,47 @@
     pointer-events: none;
 }
 
-.pricing-card.selected {
-    animation: pulse 2s ease-in-out infinite;
-    border: 3px solid var(--secondary);
-    box-shadow: 0 0 30px rgba(237, 207, 46, 0.3);
+/* Popular Badge */
+.popular-badge {
+    position: absolute;
+    top: 20px;
+    right: -35px;
+    background: var(--secondary);
+    color: var(--primary);
+    padding: 5px 30px;
+    transform: rotate(45deg);
+    font-weight: bold;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    font-size: 0.8em;
+    font-family:'Times New Roman', Times, serif !important;
+    width: 150px;
+    text-align: center;
+    animation: badgePulse 2s infinite ease-in-out;
+    z-index: 2;
 }
 
-/* Price Animation */
+/* Price Styles */
+.price-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.original-price {
+    font-size: 1.4em;
+    color: var(--text-light);
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
 .price {
+    font-size: 2.2em;
+    color: var(--accent);
+    font-weight: bold;
+    margin: 15px 0;
+    padding: 0px 20px;
+    border-radius: 10px;
     position: relative;
     overflow: hidden;
 }
@@ -248,47 +1075,12 @@
     opacity: 1;
 }
 
-/* Popular Badge Animation */
-.popular-badge {
-    position: absolute;
-    top: 15px;
-    right: -50px;
-    background: var(--secondary);
-    color: var(--primary);
-    padding: 8px 40px;
-    transform: rotate(45deg);
-    font-weight: bold;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    width: 150px;
-    text-align: center;
-    animation: badgePulse 2s infinite ease-in-out;
-    z-index: 2;
-}
-/* Add these new styles */
-.price-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-}
-
-.original-price {
-    font-size: 1.4em;
-    color: var(--text-light);
-    text-decoration: line-through;
-    opacity: 0.7;
-}
-
-
-.pricing-card.popular .price-container {
-    position: relative;
-}
-
+/* Save Badge */
 .pricing-card.popular .price-container::after {
     content: 'Save 66.69%';
     position: absolute;
-    top: -5px;
-    right: 15px;
+    top: 60px;
+    right: 25px;
     background: var(--accent);
     color: white;
     padding: 4px 8px;
@@ -298,30 +1090,166 @@
     transform: rotate(12deg);
 }
 
+/* Package Name */
+.package-name {
+    font-size: 1.4em;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+/* Duration */
+.duration {
+    font-size: 0.85em;
+    color: var(--text-light);
+    margin-bottom: 15px;
+}
+
+/* Features Lists */
+.features, .not-included {
+    list-style: none;
+    text-align: left;
+}
+
+.features {
+    margin: 30px 0 0 20px !important;
+}
+
+.not-included {
+    margin: 5px 0 0 20px !important;
+    opacity: 0.7;
+}
+
+.features li, .not-included li {
+    padding: 4px 0;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.features li::before {
+    content: "✓";
+    color: var(--accent);
+    font-weight: bold;
+}
+
+
+/* Add these styles to your existing CSS */
+.features {
+    position: relative;
+    max-height: 180px; /* Adjust based on your needs */
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.features.expanded {
+    max-height: 1000px; /* Large enough to show all content */
+}
+
+.read-more-btn {
+    display: none; /* Hidden by default */
+    width: 100%;
+    text-align: left;
+    margin: 5px 0 0 20px;
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 0.8em;
+    cursor: pointer;
+    padding: 5px 0;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.read-more-btn:hover {
+    color: var(--primary);
+}
+
+.read-more-btn.visible {
+    display: block;
+}
+
+/* Gradient fade effect for hidden content */
+.features::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to bottom, transparent, white);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.features.has-more::after {
+    opacity: 1;
+}
+
+.features.expanded::after {
+    display: none;
+}
+
 @media (max-width: 768px) {
-    .original-price {
-        font-size: 0.8em !important;
+    .features {
+        max-height: 150px;
     }
     
-  
-    
-    .pricing-card.popular .price-container::after {
-        top: -15px;
-        right: -10px;
-        font-size: 0.6em;
-        padding: 3px 6px;
+    .read-more-btn {
+        font-size: 0.75em;
     }
 }
 
 @media (max-width: 480px) {
-    .original-price {
-        font-size: 0.7em !important;
+    .features {
+        max-height: 130px;
     }
     
-   
+    .read-more-btn {
+        font-size: 0.7em;
+    }
 }
-/* Button Animation */
+.not-included li::before {
+    content: "×";
+    color: #ff7675;
+    font-weight: bold;
+}
+.hero .btn{
+    /* Button Styles */
+    display: inline-block;
+    padding: 10px 25px;
+    background-color:  #EDCF2E !important;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9em;
+    border-radius: 10px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 30%;
+    margin-top: 15px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+/* Button Styles */
 .btn {
+    display: inline-block;
+    padding: 10px 25px;
+    background: var(--primary);
+    color: white;
+    text-decoration: none;
+    font-size: 0.9em;
+    border-radius: 10px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 80%;
+    margin-top: 15px;
     position: relative;
     overflow: hidden;
     z-index: 1;
@@ -349,103 +1277,27 @@
 .btn:hover {
     color: var(--primary);
     border-color: var(--secondary);
+    transform: translateY(-2px);
 }
 
-/* Features Animation */
-.features li, .not-included li {
-    transition: all 0.3s ease;
-}
-
-.features li:hover, .not-included li:hover {
-    transform: translateX(5px);
-    color: var(--primary);
-}
-
-/* Selection Indicator */
-.pricing-card .check-mark {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 25px;
-    height: 25px;
-    border: 2px solid var(--accent);
-    border-radius: 50%;
-    opacity: 0;
-    transform: scale(0);
-    transition: all 0.3s ease;
-    z-index: 3;
-}
-
-.pricing-card.selected .check-mark {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.pricing-card.selected .check-mark::before {
-    content: '✓';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--accent);
-    font-size: 14px;
-}
-
-/* Rest of the animations remain the same */
-.service-card {
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.service-card:hover {
-    transform: translateY(-10px) scale(1.03);
-}
-
-.service-icon {
-    transition: all 0.3s ease;
-}
-
-.service-card:hover .service-icon {
-    transform: scale(1.1) rotate(5deg);
-}
-
-.stat-card {
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.stat-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-}
-
-.stat-number {
-    transition: all 0.3s ease;
-}
-
-.stat-card:hover .stat-number {
-    transform: scale(1.1);
-    color: var(--accent);
-}
-
-/* Mobile Optimization */
+/* Mobile Responsive Styles */
 @media (max-width: 768px) {
-    .pricing-card:hover {
-        transform: translateY(-5px) scale(1.01);
+    .pricing-grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 5px;
     }
-    
-    .btn::before {
-        display: none;
+
+    .pricing-card {
+        width: 90%;
+        max-width: 320px;
+        margin: 0 auto;
     }
-    
-    .features li:hover, .not-included li:hover {
-        transform: translateX(2px);
-    }
-    
-    .service-card:hover {
-        transform: translateY(-5px) scale(1.01);
-    }
-    
-    .stat-card:hover {
-        transform: translateY(-3px);
+
+    .original-price {
+        font-size: 1em !important;
     }
 
     .popular-badge {
@@ -455,384 +1307,70 @@
         font-size: 0.65em;
         width: 130px;
     }
-}
-      .pricing-card {
-    background: white;
-    border-radius: 15px;
-    padding: 15px 10px;  /* Reduced padding */
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-    border: 2px solid rgba(0, 0, 0, 0.1) ; /* Light gray border */
-}
 
-.pricing-card:hover {
-    transform: translateY(-5px);
-}
-
-.pricing-card.popular {
-    border: 2px solid var(--primary);  /* Thinner border */
-}
-
-.popular-badge {
-    position: absolute;
-    top: 20px;  /* Adjusted position */
-    right: -35px;
-    background: var(--secondary);
-    color: var(--primary);
-    padding: 5px 30px;  /* Smaller padding */
-    transform: rotate(45deg);
-    font-weight: bold;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    font-size: 0.8em;  /* Smaller font */
-    font-family:'Times New Roman', Times, serif !important ;
-}
-  
-.package-name {
-    font-size: 1.4em;  /* Smaller font */
-    color: var(--primary);
-    margin-bottom: 10px;  /* Less margin */
-}
-
-.price {
-    font-size: 2.2em;  /* Smaller font */
-    color: var(--accent);
-    font-weight: bold;
-    margin: 15px 0;  /* Less margin */
-    padding: 0px 20px 0px 20px;
-    border-radius: 10px;
-}
-
-.duration {
-    font-size: 0.85em;  /* Smaller font */
-    margin-bottom: 15px;  /* Less margin */
-}
-
-.features li, .not-included li {
-    padding: 4px 0 ;  /* Less padding */
-    font-size: 0.9em;  /* Smaller font */
-}
-
-
-
-
-        .duration {
-            color: var(--text-light);
-            margin-bottom: 30px;
-        }
-
-        .features {
-            list-style: none;
-            margin: 30px 0 0 20px !important;
-            text-align: left;
-        }
-
-        .features li {
-            padding: 1px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .features li::before {
-            content: "✓";
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        .not-included {
-            list-style: none;
-            margin: 5px 0 0 20px !important;
-            opacity: 0.7;
-            text-align: left;
-        }
-
-        .not-included li {
-            padding: 1px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .not-included li::before {
-            content: "×";
-            color: #ff7675;
-            font-weight: bold;
-        }
-
-        .btn {
-            display: inline-block;
-             padding: 10px 25px;  /* Smaller padding */
-            background: var(--primary);
-            color: white;
-            text-decoration: none;
-            font-size: 0.9em;  /* Smaller font */
-            border-radius: 10px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 80%;
-           margin-top: 15px;  /* Less margin */
-        }
-
-        .btn:hover {
-            background: #2c3b7a;
-            transform: translateY(-2px);
-        }
-
-        /* Stats Section */
-        .stats {
-            padding: 80px 0;
-            background: white;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 30px;
-            text-align: center;
-        }
-
-        .stat-card {
-            padding: 30px;
-            background: var(--bg-light);
-            border-radius: 15px;
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-number {
-            font-size: 2.5em;
-            color: var(--primary);
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .stat-card p {
-            color: var(--text-light);
-            font-weight: 500;
-        }
-   .pricing-card p {
-        font-size: 0.9em;
-        margin-bottom: 6px;
+    .pricing-card.popular .price-container::after {
+      top: 50px;
+    right: 15px;
+        font-size: 0.5em;
+        padding: 2px 4px;
     }
 
-
-    .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    padding: 10px;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    .pricing-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-        padding: 5px;
+    .btn::before {
+        display: none;
     }
 
-    /* Target the third pricing card */
-    .pricing-grid .pricing-card:last-child {
-        grid-column: 1 / -1;  /* Span full width */
-        max-width: 280px;     /* Limit width */
-        margin: 0 auto;       /* Center horizontally */
+    .features li:hover, .not-included li:hover {
+        transform: translateX(2px);
     }
 }
 
-/* For even smaller screens */
 @media (max-width: 480px) {
-    .pricing-grid {
-        gap: 8px;
-    }
-
-    .pricing-grid .pricing-card:last-child {
-        max-width: 250px;     /* Slightly smaller on mobile */
-    }
-}
-
-/* Optional: Add a visual separator */
-@media (max-width: 768px) {
-    .pricing-grid .pricing-card:last-child {
-        margin-top: 15px;     /* Add some space above the centered card */
-        box-shadow: 0 15px 35px rgba(0,0,0,0.15);  /* Stronger shadow for emphasis */
-    }
-}
-     /* Tablet and Mobile Responsive Styles */
-@media (max-width: 768px) {
-    .container {
-        padding: 0 15px;
-    }
-
-    .hero {
-        padding: 60px 20px;
-    }
-
-    .hero h1 {
-        font-size: 2em;
-    }
-
-    .hero p {
-        font-size: 0.9em;
-    }
-
-    .section-header {
-        margin-bottom: 40px;
-    }
-
-    .section-header h2 {
-        font-size: 1.8em;
-    }
-
-    .section-header p {
-        font-size: 0.9em;
-    }
-
-    .services-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-        padding: 0 10px;
-    }
-
-    .service-card {
-        padding: 20px 15px;
-    }
-
-    .service-icon {
-        font-size: 2em;
-        margin-bottom: 15px;
-    }
-
-    .service-card h3 {
-        font-size: 1.2em;
-        margin-bottom: 10px;
-    }
-
-    .service-card p {
-        font-size: 0.8em;
-    }
-
-    /* Updated Pricing Styles for Tablet */
-    .pricing {
-        padding: 40px 0;
-    }
-
-    .pricing-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-        padding: 5px;
-    }
-
     .pricing-card {
-        padding: 15px 12px;
-        border-radius: 15px;
+        width: 95%;
+        max-width: 280px;
     }
 
-    .package-name {
-        font-size: 1.1em;
-        margin-bottom: 8px;
+    .original-price {
+        font-size: 0.7em !important;
     }
 
     .price {
-        font-size: 1em !important;
-        margin: 5px 0 !important;
-    }
-
-    .duration {
-        font-size: 0.7em;
-        margin-bottom: 10px;
-    }
-
-    .pricing-card p {
-        font-size: 0.75em;
-        margin-bottom: 8px;
-    }
-
-    .features, .not-included {
-        margin: 5px 0;
+        font-size: 1.8em;
     }
 
     .features li, .not-included li {
-        font-size: 0.7em;
-        padding: 4px 0;
-        gap: 5px;
-    }
-  .features {
-            margin: 10px 0 0 10px !important;
-        }
-        .not-included {
-            margin: 5px 0 0 10px !important;
-         
-        }
-    .popular-badge {
-        top: 12px;
-        right: -45px;
-        padding: 4px 30px;
-        font-size: 0.65em;
-        width: 130px;
-    }
-    .btn {
-        padding: 8px 15px;
         font-size: 0.75em;
-        margin-top: 10px;
     }
 
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-    }
-
-    .stat-number {
-        font-size: 2em;
-    }
-
-    .stat-card p {
+    .btn {
         font-size: 0.8em;
+        padding: 8px 20px;
+    }
+    .hero .btn {
+        font-size: 0.8em;
+        padding: 8px 20px;
+    }
+    .popular-badge {
+        top: 10px;
+        right: -42px;
+        padding: 3px 25px;
+        font-size: 0.55em;
+        width: 120px;
     }
 }
-
 /* Mobile Specific Styles */
 @media (max-width: 480px) {
     .hero h1 {
-        font-size: 1.8em;
+        font-size: 1.3em;
     }
 
     .hero p {
-        font-size: 0.85em;
+        font-size: 0.65em;
     }
 
-    .section-header h2 {
-        font-size: 1.5em;
-    }
+  
 
-    .service-card {
-        padding: 15px 12px;
-    }
-
-    .service-icon {
-        font-size: 1.8em;
-    }
-
-    /* Updated Pricing Styles for Mobile */
-    .pricing-grid {
-        gap: 8px;
-        padding: 3px;
-    }
-
-    .pricing-card {
-        padding: 12px 8px;
-        border-radius: 12px;
-    }
+  
 
     .package-name {
         font-size: 1em;
@@ -840,8 +1378,8 @@
     }
 
     .price {
-        font-size: 0.8em !important;
-        margin: 8px 0;
+        font-size: 1.3em !important;
+        margin: 4px 0;
     }
 
     .duration {
@@ -887,22 +1425,489 @@
         border-width: 2px;
     }
 
-    .stats {
-        padding: 40px 0;
-    }
 
-    .stat-card {
-        padding: 20px 15px;
-    }
+
+
 }
 
 .text-dark{
    color: black !important;
 }
+
+
+/* Video Section Styles */
+.video-section {
+    padding: 30px 0;
+    background: white;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.video-card {
+    background: var(--bg-light);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.video-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.video-card h3 {
+    color: var(--primary);
+    font-size: 1em;
+    margin: 12px 10px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.video-card p {
+    color: var(--text-light);
+    font-size: 0.8em;
+    margin: 0 10px 12px;
+    text-align: center;
+    line-height: 1.3;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .video-section {
+        padding: 20px 0;
+    }
+
+    .video-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 8px;
+    }
+
+    .video-card {
+        border-radius: 8px;
+    }
+
+    .video-card h3 {
+        font-size: 0.85em;
+        margin: 8px 6px;
+    }
+
+    .video-card p {
+        font-size: 0.7em;
+        margin: 0 6px 8px;
+        line-height: 1.2;
+    }
+}
+
+@media (max-width: 480px) {
+    .video-grid {
+        grid-template-columns: repeat(2, 1fr); /* Maintain 2 columns */
+        gap: 8px;
+        padding: 5px;
+    }
+
+    .video-card {
+        border-radius: 6px;
+    }
+
+    .video-card h3 {
+        font-size: 0.75em;
+        margin: 6px 4px;
+    }
+
+    .video-card p {
+        font-size: 0.65em;
+        margin: 0 4px 6px;
+    }
+
+    .section-header h2 {
+        font-size: 1.2em;
+    }
+
+    .section-header p {
+        font-size: 0.75em;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+    .video-card h3 {
+        font-size: 0.7em;
+    }
+
+    .video-card p {
+        font-size: 0.6em;
+    }
+}
+
+
+.details-li::before {
+    display: none !important; /* Remove the checkmark */
+}
+/* Button within list styles */
+.get-details-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px dashed var(--primary);
+    color: var(--primary);
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+}
+
+.get-details-btn span {
+    font-weight: 600;
+}
+
+.arrow-icon {
+    font-size: 1.1em;
+    transition: transform 0.3s ease;
+}
+
+.get-details-btn:hover {
+    background: var(--bg-light);
+    border-style: solid;
+    color: #000;
+}
+
+.get-details-btn:hover .arrow-icon {
+    transform: translateX(5px);
+}
+  .navbar {
+    background: white;
+    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.nav-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Logo Styles */
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 40px;
+    width: auto;
+}
+
+/* Action Button */
+.suggest-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: #2A5DCE;
+    padding: 6px 16px !important;
+    border: 1px solid #2A5DCE; /* Thinner border */
+    border-radius: 3px;
+    text-decoration: none;
+    font-size: 0.85em; /* Smaller font size */
+    transition: all 0.3s ease;
+    letter-spacing: 0.2px;
+}
+
+.suggest-btn i {
+    font-size: 0.95em;
+    transition: transform 0.3s ease;
+}
+
+.suggest-btn:hover {
+    background: #2A5DCE;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(35, 47, 101, 0.15);
+}
+
+.suggest-btn:hover i {
+    transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .logo {
+        height: 32px;
+    }
+
+    .suggest-btn {
+        padding: 5px 12px;
+        font-size: 0.5em;
+        gap: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        height: 28px;
+    }
+
+    .suggest-btn {
+        padding: 3px 8px;
+        font-size: 0.55em;
+    }
+
+    .suggest-btn span {
+        display: none;
+    }
+
+    .suggest-btn i {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 360px) {
+    .container {
+        padding: 0 10px;
+    }
+    
+    .suggest-btn {
+        padding: 4px 8px;
+    }
+}
+
+
+.special-section {
+    padding: 60px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.special-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('/path-to-your-pattern.svg');
+    opacity: 0.05;
+    pointer-events: none;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-header h2 {
+    color: var(--primary);
+    font-size: 2.2em;
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 15px;
+}
+
+.section-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: var(--secondary);
+    border-radius: 2px;
+}
+
+.special-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.text-content {
+    padding: 20px;
+}
+
+.main-text {
+    font-size: 1.1em;
+    color: var(--text-dark);
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.challenge, .solution {
+    margin: 25px 0;
+}
+
+.challenge p, .solution p {
+    font-size: 1.05em;
+    color: var(--primary);
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.challenge-list, .solution-list {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.challenge-list li, .solution-list li {
+    position: relative;
+    padding: 8px 0 8px 25px;
+    font-size: 1em;
+    color: var(--text-dark);
+    line-height: 1.5;
+}
+
+.challenge-list li::before {
+    content: '•';
+    color: #ff7675;
+    position: absolute;
+    left: 0;
+    font-size: 1.5em;
+    line-height: 1;
+}
+
+.solution-list li::before {
+    content: '✓';
+    color: var(--accent);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.highlight {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.special-content {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .special-section {
+        padding: 40px 0;
+    }
+
+    .section-header h2 {
+        font-size: 1.8em;
+    }
+
+    .main-text {
+        font-size: 1em;
+    }
+
+    .challenge p, .solution p {
+        font-size: 1em;
+    }
+
+    .challenge-list li, .solution-list li {
+        font-size: 0.9em;
+        padding: 6px 0 6px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-header h2 {
+        font-size: 1.5em;
+    }
+
+    .special-content {
+        padding: 15px;
+    }
+
+    .text-content {
+        padding: 10px;
+    }
+
+    .main-text {
+        font-size: 0.9em;
+    }
+
+    .challenge-list li, .solution-list li {
+        font-size: 0.85em;
+        padding: 5px 0 5px 18px;
+    }
+}
     </style>
     
 </head>
 <body>
+
+    <nav class="navbar">
+    <div class="container">
+        <div class="nav-content">
+            <!-- Logo Section -->
+            <a href="https://indianeduhub.in" class="logo-wrapper">
+                <img src="./images/ieh-logo.png" alt="Indian Edu Hub Logo" class="logo">
+            </a>
+            
+            <!-- Action Buttons -->
+            <div class="nav-actions">
+                <a href="https://suggest.indianeduhub.in" class="suggest-btn">
+                    <i class="fas fa-lightbulb"></i>
+                    <p>Suggest me a University</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
@@ -911,125 +1916,244 @@
             <a href="#pricing" class="btn">Let's Start</a>
         </div>
     </section>
-
-    <!-- Services Section -->
-    <section class="services" id="services">
-        <div class="container">
-            <div class="section-header">
-                <h2>Our End to End Services</h2>
-                <p>Comprehensive support for your educational journey</p>
+<!-- Video Section -->
+<section class="video-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Learn More About Our Services</h2>
+            <p>Watch our detailed guides about end-to-end services</p>
+        </div>
+        
+        <div class="video-grid">
+            <div class="video-card">
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/r588USiDBMc?si=RduX8CZRsg9agnnC" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <h3>Understanding Our Services</h3>
+                <p>Learn how we help you achieve your educational goals</p>
             </div>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">🎓</div>
-                    <h3>University Suggestion</h3>
-                    <p>Which is full fill your requirement and growth</p>
+            
+            <div class="video-card">
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/mwlrFeuMC6o?si=glHo8SzkOJwBTbqe" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">📊</div>
-                    <h3>Detailed Report</h3>
-                    <p>As Per your background, skills, interest</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">📝</div>
-                    <h3>Registration Support</h3>
-                    <p>Registration Support Application Registration, Loan Approval</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">💰</div>
-                    <h3>Scholarship Support</h3>
-                    <p>Assured EMI & Scholarship support 3000 to 10000</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🛠️</div>
-                    <h3>Technical Support</h3>
-                    <p>Academic, LMS Support</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">📜</div>
-                    <h3>Upskill Certification</h3>
-                    <p>3 months Diploma certificate in your specialised subject</p>
-                </div>
+                <h3>Student Success Stories</h3>
+                <p>See how our services have helped other students</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+<!-- Add this modal HTML at the end of your body tag -->
+<div id="servicesModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <section class="services">
+    <div class="container">
+        <div class="services-header">
+            <span class="top-title">Our end to end Support</span>
+            <h4 class="main-title">Complete your course with us easily<br>and gain even more benefits</h4>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-item">
+                <div class="icon-wrap">
+                    <img src="/icon/registration.png" alt="Registration">
+                </div>
+                <h3>Registration & Admission Support</h3>
+                <ul>
+                    <li>University Registration</li>
+                    <li>Document submission & Fee Payment</li>
+                    <li>Status tracking & admission confirmation</li>
+                </ul>
+            </div>
+
+            <!-- More Service Items -->
+            <div class="service-item">
+                <div class="icon-wrap">
+                    <img src="/icon/help-desk.png" alt="Technical">
+                </div>
+                <h3>Technical Support</h3>
+                <p>Assistance provided by a team to resolve issues and optimize your Learning Management System (LMS).</p>
+            </div>
+
+            <div class="service-item">
+                <div class="icon-wrap">
+                    <img src="/icon/learning-support.png" alt="Academic">
+                </div>
+                <h3>Academic Support</h3>
+                <p>External services offer additional solutions and guidance to help you succeed in your studies.</p>
+            </div>
+
+            <div class="service-item">
+                <div class="icon-wrap">
+                    <img src="/icon/dashboard.png" alt="Dashboard">
+                </div>
+                <h3>Our own dashboard</h3>
+                <p>A personalized portal you can access and manage your account information, & interact with client support</p>
+            </div>
+
+            <!-- Extra service items (hidden by default on mobile) -->
+            <div class="service-item extra">
+                <div class="icon-wrap">
+                    <img src="/icon/partners.png" alt="Community">
+                </div>
+                <h3>Dedicated Community</h3>
+                <p>A specialized members to share information, ask questions, and engage with each other through WhatsApp.</p>
+            </div>
+
+            <div class="service-item extra">
+                <div class="icon-wrap">
+                    <img src="/icon/24-hours.png" alt="Support">
+                </div>
+                <h3>24x7 Solution Desk</h3>
+                <p>Round-the-clock assistance for clients, available at 9 × 7 for immediate help and resolution.</p>
+            </div>
+
+            <div class="service-item extra">
+                <div class="icon-wrap">
+                    <img src="/icon/peer-to-peer.png" alt="Networking">
+                </div>
+                <h3>Networking & convocation</h3>
+                <p>Creating valuable professional connections & A formal graduation ceremony</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+  </div>
+
+    </div>
 
 <!-- Pricing Section -->
 <section class="pricing" id="pricing">
     <div class="container">
-        <div class="section-header">
-            <h2>Choose Your Perfect Plan</h2>
+        <div class="section-header ">
+            <h2 class="">Choose Your Success University with Our Exclusive Membership Plans</h2>
             <p>Select the package that best suits your learning journey</p>
         </div>
-        
+
+        <!-- Mobile Tabs -->
+        <div class="pricing-tabs">
+            <button class="tab-btn active" data-plan="lite">Lite</button>
+            <button class="tab-btn" data-plan="pro">Pro</button>
+            <button class="tab-btn" data-plan="premium">Premium</button>
+        </div>
+
         <div class="pricing-grid">
-           <!-- Life Package -->
-<div class="pricing-card">
-    <h2 class="package-name">Lite</h2>
-    <div class="price-container">
-        <div class="original-price">₹999</div>
-        <div class="price">Now @Free</div>
-    </div>
-    <div class="duration">Per Month</div>
-    <p>Perfect for individuals starting their journey</p>
-    <ul class="features">
-      
-        <li>Customised University Suggestion</li>
-        <li>Detailed University Report</li>
-        <li>University Web Portal Access</li>
-        <li>Registration Support</li>
-        <li>EMI Support Available</li>
-        <li>Free Affiliate Opportunity</li>
-    </ul>
-    <ul class="not-included">
-        <li>1-on-1 Mentoring</li>
-        <li>Premium Resources</li>
-        <li>Career Guidance</li>
-    </ul>
-    <button class="btn">Choose</button>
-</div>
+            <!-- Lite Package -->
+            <div class="pricing-card active" data-plan="lite">
+                  <h2 class="package-name">Lite Membership</h2>
+                <div class="price-container">
+                    <div class="original-price">₹999</div>
+                    <div class="price">Now @Free</div>
+                </div>
+                <div class="duration">One Time</div>
+                <p>Essential guidance to get started</p>
+                <ul class="features">
+                    <li>Basic University Suggestion report</li>
+                    <li>25-Minute Mentoring</li>
+                    <li>Career Roadmap</li>
+                    <li>Affiliate Opportunities</li>
+                    <li>Scholarships up to ₹3,000</li>
+                    <li>Registration Assistance</li>
+                </ul>
+                <button class="btn">Get Started Free</button>
+            </div>
+
             <!-- Pro Package -->
-            <div class="pricing-card popular">
-                <div class="popular-badge">POPULAR</div>
-                <h2 class="package-name">Pro</h2>
+            <div class="pricing-card popular" data-plan="pro">
+                 <div class="popular-badge">POPULAR</div>
+                <h2 class="package-name">Pro Membership</h2>
                 <div class="price-container">
                     <div class="original-price">₹2999</div>
                     <div class="price">Now @1000</div>
                 </div>
-                <div class="duration">Per Month</div>
-                <p>Ideal for serious learners seeking excellence</p>
+                <div class="duration">One Time</div>
+                <p>Enhanced support for deeper insights</p>
                 <ul class="features">
-                    <li>Everything in Lite</li>
-                    <li>1-on-1 Mentoring Sessions</li>
-                    <li>Career Guidance Sessions</li>
+                    <li>Everything in Lite, PLUS</li>
+                    <li>Detailed University Suggestion report</li>
+                    <li>Virtual University Tour</li>
+                    <li>Registration Support</li>
+                    <li>EMI Assistance</li>
+                    <li>Scholarships up to ₹5,000</li>
                 </ul>
-                <ul class="not-included">
-                    <li>Premium Resources</li>
-                </ul>
-                <button class="btn">Choose</button>
+                <button class="btn">Choose Pro</button>
             </div>
 
             <!-- Premium Package -->
-            <div class="pricing-card">
-                <h2 class="package-name">Premium</h2>
+            <div class="pricing-card" data-plan="premium">
+                  <h2 class="package-name">Premium Membership</h2>
                 <div class="price-container">
                     <div class="original-price">₹8999</div>
                     <div class="price">Now @6999</div>
                 </div>
-                <div class="duration">Per Month</div>
-                <p>Complete package for ultimate success</p>
+                <div class="duration">One Time</div>
+                <p>All-inclusive support for your success</p>
                 <ul class="features">
-                    <li>Everything in Pro, plus:</li>
-                    <li>Unlimited 1-on-1 Sessions</li>
-                     <li>24/7 Support Service</li>
-        <li>Personal Mentor</li>
+                    <li>Everything in Pro, PLUS</li>
+                    <li>Scholarships up to ₹10,000</li>
+                    <li>Access to 47,000+ Free Courses</li>
+                    <li>Registration & Admission Support</li>
+                    <li>Technical Support</li>
+                    <li>Academic Support</li>
+                    <li>Our own dashboard</li>
+                    <li>Dedicated Community</li>
+                    <li>24x7 Solution Desk</li>
+                    <li>Networking & convocation</li>
+                     <li class="details-li">
+            <button class="get-details-btn">
+                <span>Get Complete Details</span>
+                <i class="arrow-icon">→</i>
+            </button>
+        </li>
                 </ul>
-                <button class="btn">Choose</button>
+                <button class="btn">Choose Premium</button>
             </div>
         </div>
     </div>
 </section>
 
+<section class="special-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Why we are special for people</h2>
+        </div>
+        <div class="special-content">
+            <div class="text-content">
+                <p class="main-text">
+                    In India, people have the option to study all courses in various institutions like universities (State govt, Central govt, Deemed to be, State private) Colleges, other institutes.
+                </p>
+                <div class="challenge">
+                    <p>But in our Indian education system people don't have an idea of:</p>
+                    <ul class="challenge-list">
+                        <li>Which course or specialisation will bring out the best in them</li>
+                        <li>Which university or institute provides quality education</li>
+                        <li>How to make the right choice for their future</li>
+                    </ul>
+                </div>
+                <div class="solution">
+                    <p>We at Indian edu hub will guide you in:</p>
+                    <ul class="solution-list">
+                        <li><span class="highlight">Choosing the University</span> as per your background</li>
+                        <li><span class="highlight">Selecting Specialisation</span> as per your skills</li>
+                        <li><span class="highlight">Creating future growth</span> as per your aim</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {{!-- <style>
 
 </style>
@@ -1123,7 +2247,241 @@
                 </div>
             </div>
         </div>
+    
     </section>
+    <!-- Special Section -->
+
+
+
+    <style>
+    
+/* Footer styling */
+footer {
+    background-image: linear-gradient(130deg, #05092D 13%, #123662 81%);
+    padding: 40px 5px;
+    color: white;
+    text-align: left;
+    width: 100%;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    padding: 0 20px;
+}
+
+.footer-section {
+    flex: 1;
+    margin: 0 20px;
+    min-width: 200px;
+}
+
+/* Logo Section */
+.footer-section.logo {
+    min-width: 250px;
+}
+
+.head {
+    height: 60px;
+    margin-bottom: 15px;
+}
+
+.footer-section p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #abb8c3;
+}
+
+/* Links Section */
+.footer-section h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.footer-section.links ul {
+    list-style: none;
+    padding: 0;
+    color: #abb8c3;
+}
+
+.footer-section.links ul li {
+    margin: 8px 0;
+}
+
+.footer-section.links ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 14px;
+}
+
+.footer-section.links ul li a:hover {
+    color: #ffffff;
+}
+
+/* Social Icons */
+.footer-section .social-icons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.footer-section .social-icons a {
+    width: 35px;
+    height: 35px;
+    background-color: #3b5998;
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.footer-section .social-icons a:hover {
+    background-color: #1d3a73;
+    transform: translateY(-2px);
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    padding: 15px 20px;
+    color: #abb8c3;
+    font-size: 0.8rem !important;
+    background-color: #001c38 !important;
+}
+
+.footer-bottom .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+    footer {
+        padding: 30px 0;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        gap: 30px;
+        padding: 0 15px;
+    }
+
+    .footer-section {
+        margin: 0;
+        width: 100%;
+        text-align: start;
+    }
+
+    .head {
+        height: 45px;
+        margin-bottom: 10px;
+    }
+
+    .footer-section p {
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+
+    .footer-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+
+    .footer-section .social-icons {
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+    .footer-section.links ul li {
+        margin: 6px 0;
+    }
+
+    .footer-section.links ul li a {
+        font-size: 13px;
+    }
+
+    .footer-section.location iframe {
+        max-width: 100%;
+        height: 180px;
+    }
+
+    .footer-bottom {
+        text-align: center;
+        padding: 12px 15px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+    .footer-section .social-icons a {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    .head {
+        height: 40px;
+    }
+
+    .footer-section p {
+        font-size: 12px;
+    }
+
+    .footer-section.location iframe {
+        height: 160px;
+    }
+}
+</style>
+        <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section logo">
+                <img class="head mb-3" src="/images/white.png" alt="Logo" >
+              <p>The College Mentor has shaped the futures of over 5,000 students and professionals, helping them achieve their dreams based on their unique skills and backgrounds.</p>
+
+                <div class="social-icons mb-3">
+                <a href="https://www.facebook.com/indianeduhub.in" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/indianeduhub.in/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            </div>
+            <div class="footer-section links">
+                <h3>Quick links</h3>
+                <ul class="mt-3">
+                    <li><a href="https://indianeduhub.in/">Home</a></li>
+                    <li><a href="https://indianeduhub.in/about/">About us</a></li>
+                    <li><a href="https://indianeduhub.in/course/">Course</a></li>
+					<li><a href="https://indianeduhub.in/recruitment-form/">Career</a></li>
+                </ul>
+            </div>
+            <div class="footer-section location">
+                <h3 class="mb-4">Location</h3>
+                <iframe loading="lazy"
+					src="https://maps.google.com/maps?q=Indian%20edu%20hub%2C%2084%2F85%2C%20Infantry%20Rd%2C%20Bengaluru%2C%20Karnataka%20560001%2C%20India&#038;t=m&#038;z=14&#038;output=embed&#038;iwloc=near"
+					title="Indian edu hub, 84/85, Infantry Rd, Bengaluru, Karnataka 560001, India"
+					aria-label="Indian edu hub, 84/85, Infantry Rd, Bengaluru, Karnataka 560001, India"
+			></iframe>
+            </div>
+        </div>
+    </footer>
+    <footer class="footer-bottom">
+        <div class="container">
+            <p class="mb-0">© All rights reserved by indianeduhub.in</p>
+        </div>
+    </footer>
 
     <!-- Add this script at the end of your body tag -->
 <script>
@@ -1154,6 +2512,122 @@
             });
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth <= 768) {  // Only for mobile screens
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const cards = document.querySelectorAll('.pricing-card');
+
+        // Function to show selected plan
+        function showPlan(planType) {
+            // Update tabs
+            tabBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.plan === planType) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Update cards
+            cards.forEach(card => {
+                card.classList.remove('active');
+                if (card.dataset.plan === planType) {
+                    card.classList.add('active');
+                }
+            });
+        }
+
+        // Add click handlers to tabs
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showPlan(btn.dataset.plan);
+            });
+        });
+
+        // Show first plan by default
+        showPlan('lite');
+    }
+});
+
+// Handle resize
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        // Reset for desktop view
+        document.querySelectorAll('.pricing-card').forEach(card => {
+            card.classList.remove('active');
+            card.style.display = '';
+        });
+    }
+});
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const featureLists = document.querySelectorAll('.features');
+    
+    featureLists.forEach(list => {
+        const items = list.querySelectorAll('li');
+        
+        if (items.length > 6) {
+            // Add read more button
+            const readMoreBtn = document.createElement('button');
+            readMoreBtn.className = 'read-more-btn visible';
+            readMoreBtn.textContent = 'Read More';
+            list.parentNode.insertBefore(readMoreBtn, list.nextSibling);
+            
+            // Add class for gradient effect
+            list.classList.add('has-more');
+            
+            // Add click handler
+            readMoreBtn.addEventListener('click', function() {
+                list.classList.toggle('expanded');
+                readMoreBtn.textContent = list.classList.contains('expanded') ? 'Show Less' : 'Read More';
+                
+                // Smooth scroll if collapsing
+                if (!list.classList.contains('expanded')) {
+                    list.closest('.pricing-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+        }
+    });
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Get modal elements
+    const modal = document.getElementById('servicesModal');
+    const closeBtn = modal.querySelector('.close');
+    const getDetailsBtn = document.querySelector('.pricing-card[data-plan="premium"] .get-details-btn');
+
+    // Open modal
+    getDetailsBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    });
+
+    // Close modal
+    closeBtn.addEventListener('click', function() {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    });
+
+    // Close on outside click
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Close on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    });
+});
 </script>
 </body>
 </html>

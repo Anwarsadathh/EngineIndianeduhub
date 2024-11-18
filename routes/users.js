@@ -37,7 +37,7 @@ const upload = multer({ storage: storage });
 
 router.get("/", async (req, res) => {
   try {
-    const database = getDb(); // Use existing helper function to get the DB instance
+    const database = getDb();
     const engineCollection = database.collection(collection.ENGINE_COLLECTION);
     const engineData = await engineCollection.find().toArray();
 
@@ -76,7 +76,7 @@ router.get("/", async (req, res) => {
     res.render("user/index", {
       layout: "user-layout",
       title: "Suggest me the Best Online/Distance University - Indian Edu Hub",
-      engineData,
+      engineData: JSON.stringify(engineData), // Stringify the data for client-side use
       availableCourses: uniqueCourses,
       specializationMap,
     });
@@ -759,10 +759,17 @@ router.post("/submit-form-sug", async (req, res) => {
 
       // Update document in dummy_COLLECTION with the PDF link
       const clientsCollection = database.collection("dummy");
-      await clientsCollection.updateOne(
-        { _id: documentId },
-        { $set: { pdfLink: pdfUrl } }
-      );
+     // Update the document in the dummy_COLLECTION with the PDF link and university names
+await clientsCollection.updateOne(
+  { _id: documentId },
+  {
+    $set: {
+      pdfLink: pdfUrl,
+      uni1: universityDetails.map((uni) => uni.universityName || "N/A"),
+    },
+  }
+);
+
 
        try {
         // Prepare data for Interakt API request
