@@ -337,7 +337,7 @@ router.get("/", async (req, res) => {
 //     const pdfUrl = `https://crm.indianeduhub.in/pdf/${pdfFilename}`;
 
 //     // Update document with PDF link
-//     const clientsCollection = database.collection("dummy");
+//     const clientsCollection = database.collection("referral");
 //     await clientsCollection.updateOne(
 //       { _id: documentId },
 //       { $set: { pdfLink: pdfUrl } }
@@ -854,9 +854,9 @@ router.post("/submit-form-sug", async (req, res) => {
         });
       }
 
-      // Update document in dummy_COLLECTION with the PDF link
-      const clientsCollection = database.collection("dummy");
-      // Update the document in the dummy_COLLECTION with the PDF link and university names
+      // Update document in referral_COLLECTION with the PDF link
+      const clientsCollection = database.collection("referral");
+      // Update the document in the referral_COLLECTION with the PDF link and university names
       await clientsCollection.updateOne(
         { _id: documentId },
         {
@@ -884,8 +884,7 @@ router.post("/submit-form-sug", async (req, res) => {
         };
 
         // Send template message via Interakt API
-        const apiKey =
-          "d="; // Replace with actual API key
+        const apiKey ="b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=";
         const interaktResponse = await axios.post(
           "https://api.interakt.ai/v1/public/message/",
           interaktData,

@@ -1,6 +1,6 @@
 module.exports = {
-  REFERRAL_COLLECTION: "dummy",
+  REFERRAL_COLLECTION: "referral",
   GOOGLESHEETS_COLLECTION: "googlesheets",
   ENGINE_COLLECTION: "enginedata",
-  SUGGESTION_COLLECTION:"suggest",
+  SUGGESTION_COLLECTION: "suggest",
 };
