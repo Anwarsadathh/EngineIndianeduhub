@@ -835,7 +835,7 @@ router.post("/submit-form-sug", async (req, res) => {
         counter++;
       }
 
-      const pdfUrl = `https://crm.indianeduhub.in/pdf/${pdfFilename}`;
+      const pdfUrl = `https://suggest.indianeduhub.in/pdf/${pdfFilename}`;
 
       // Ensure PDF directory exists
       if (!fs.existsSync(pdfDir)) {
