@@ -71,6 +71,14 @@
               <div class="circle">
                 <span>9</span>
               </div>
+                <div class="line"></div>
+              <div class="circle">
+                <span>10</span>
+              </div>
+                  <div class="line"></div>
+              <div class="circle">
+                <span>11</span>
+              </div>
                
             </div>
            
@@ -286,8 +294,68 @@
                   <button type="button" class="next">&#8594;</button>
                 </div>
               </div>
-              <!-- Question 8 -->
-              <div id="q8" class="steps" hidden>
+            
+<div id="q8" class="steps" hidden>
+  <span class="question">When are you planning to join?</span>
+  <div class="answerWrapper4">
+    <div class="answer">
+      <input type="radio" value="Immediately" name="planningToJoin" aria-required="true">
+      <label for="Immediately">Immediately</label>
+    </div>
+    <div class="answer">
+      <input type="radio" value="InFuture" name="planningToJoin" aria-required="true">
+      <label for="InFuture">In the Future</label>
+    </div>
+    <div class="answer">
+      <input type="radio" value="JustEnquiry" name="planningToJoin" aria-required="true">
+      <label for="JustEnquiry">Just an Enquiry</label>
+    </div>
+  </div>
+  <!-- Navigation -->
+  <div class="nav">
+    <button type="button" class="prev">&#8592;</button>
+    <button type="button" class="next">&#8594;</button>
+  </div>
+</div>
+
+<div id="q9" class="steps" hidden>
+  <span class="question">How can we help you?</span>
+  <div class="answerWrapper4">
+   
+    <div class="answer">
+      <input type="radio" value="For Promotion Purpose" name="help" aria-required="true">
+      <label for="For Promotion Purpose">For Promotion</label>
+    </div>
+    <div class="answer">
+      <input type="radio" value="New Job" name="help" aria-required="true">
+      <label for="New Job">New Job</label>
+    </div>
+    <div class="answer">
+      <input type="radio" value="For Privilege" name="help" aria-required="true">
+      <label for="For Privilege">For Privilege</label>
+    </div>
+     <div class="answer">
+      <input type="radio" value="Career Upgradation" name="help" aria-required="true">
+      <label for="Career Upgradation">Career Upgradation</label>
+    </div>
+    <div class="answer">
+      <input type="radio" value="Learning New Skills" name="help" aria-required="true">
+      <label for="Learning New Skills">Learning New Skills</label>
+    </div>
+    <div class="answer">
+      <input type="radio" value="Salary Hike" name="help" aria-required="true">
+      <label for="Salary Hike">Salary Hike</label>
+    </div>
+  </div>
+  <!-- Navigation -->
+  <div class="nav">
+    <button type="button" class="prev">&#8592;</button>
+    <button type="button" class="next">&#8594;</button>
+  </div>
+</div>
+
+  <!-- Question 8 -->
+              <div id="q10" class="steps" hidden>
                 <div class="answerWrapper8">
                     <textarea type="text" name="Description" placeholder="Do you want to mention anything specific? Do mention below." aria-required="true"></textarea>
                 </div>
@@ -297,8 +365,9 @@
                   <button type="button" class="next">&#8594;</button>
                 </div>
               </div>
+
               <!-- Question 9 -->
-              <div id="q9" class="steps" hidden>
+              <div id="q11" class="steps" hidden>
                 <div class="answerWrapper9">
                   <div class="answer">
                     <input type="text" class="req" name="name" placeholder="Name" aria-required="true">
@@ -323,10 +392,13 @@
                   
                 </div>
                 <!-- Navigation -->
-                <div class="nav">
-                  <button type="button" class="prev last">&#8592;</button>
-                  <button type="button" class="submit" name="submit">Submit</button>
-                </div>
+               <div class="nav">
+    <button type="button" class="prev last">&#8592;</button>
+    <button type="button" class="submit" name="submit">
+      <span class="button-text">Submit</span>
+      <span class="loading-spinner" style="display: none;"></span>
+    </button>
+  </div>
               </div>
             </div>
           </form>

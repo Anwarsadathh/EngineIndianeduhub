@@ -116,6 +116,34 @@ q7_1.forEach((element) => {
   });
 });
 
+
+// q8 (Planning to join)
+const q8 = document.querySelectorAll("#q8 .answer");
+
+q8.forEach((element) => {
+  element.addEventListener("click", function () {
+    q8.forEach((element) => {
+      element.classList.remove("selected");
+    });
+    element.classList.add("selected");
+    element.children[0].checked = true;
+  });
+});
+
+// q9 (How we help You)
+const q9 = document.querySelectorAll("#q9 .answer");
+
+q9.forEach((element) => {
+  element.addEventListener("click", function () {
+    q9.forEach((element) => {
+      element.classList.remove("selected");
+    });
+    element.classList.add("selected");
+    element.children[0].checked = true;
+  });
+});
+
+
 // stepProgress
 const steps = document.querySelectorAll(".steps");
 const stepProgress = document.querySelectorAll(".circle");
@@ -343,7 +371,32 @@ nextButtons.forEach((element, index) => {
         }
         break;
 
+      // Update the switch case in nextButtons event listener:
       case 7:
+        checkedRadio = document.querySelector(
+          "input[name = planningToJoin]:checked"
+        );
+        if (checkedRadio != null) {
+          nextValidate = true;
+          submitData.planningToJoin = checkedRadio.value;
+        } else {
+          nextValidate = false;
+          showAlert("Please select when you are planning to join");
+        }
+        break;
+
+      case 8:
+        checkedRadio = document.querySelector("input[name = help]:checked");
+        if (checkedRadio != null) {
+          nextValidate = true;
+          submitData.help = checkedRadio.value;
+        } else {
+          nextValidate = false;
+          showAlert("Please select how we can help you");
+        }
+        break;
+
+      case 9:
         nextValidate = true;
         submitData.description = document.querySelector(
           "textarea[name = Description]"
@@ -437,10 +490,10 @@ function showAlerts(message) {
   alertify.error(message);
 
   // Clear email and mobile fields
-  const emailField = document.querySelector("#q9 .answer input[name=email]");
-  const mobileField = document.querySelector("#q9 .answer input[name=mobile]");
+  const emailField = document.querySelector("#q11 .answer input[name=email]");
+  const mobileField = document.querySelector("#q11 .answer input[name=mobile]");
   const whatsappField = document.querySelector(
-    "#q9 .answer input[name=whatsapp]"
+    "#q11 .answer input[name=whatsapp]"
   );
 
   if (emailField) {
@@ -462,7 +515,7 @@ function showAlerts(message) {
   }
 
   // Enable the submit button again
-  const submitButton = document.querySelector("#q9 .nav .submit");
+  const submitButton = document.querySelector("#q11 .nav .submit");
   if (submitButton) {
     submitButton.disabled = false;
   } else {
@@ -489,60 +542,53 @@ function getValue(selector) {
 function collectFormData() {
   let submitData = {};
 
+  // Safely get values with null checks and optional chaining
+  const safeGet = (selector, attribute = 'value') => {
+    const element = document.querySelector(selector);
+    return element ? element[attribute] : '';
+  };
+
   // Collect data from multi-step form
-  submitData.course =
-    document.querySelector("input[name=course]:checked")?.value || "";
-  submitData.specialization =
-    document.querySelector('select[name="' + submitData.course + '-Spec"]')
-      ?.value || "";
-  submitData.status =
-    document.querySelector("input[name=status]:checked")?.value || "";
-  submitData.expSalary =
-    document.querySelector("input[name=expSalary]")?.value || "";
-  submitData.prevQualificationPercentage =
-    document.querySelector("input[name=prevQualificationPercentage]")?.value || "";
-  submitData.currSalary =
-    document.querySelector("input[name=currSalary]")?.value || "";
-  submitData.currDomian =
-    document.querySelector("input[name=currDomian]")?.value || "";
-  submitData.experience =
-    document.querySelector("input[name=experience]")?.value || "";
-  submitData.empLocation =
-    document.querySelector("input[name=empLocation]:checked")?.value || "";
+  submitData.course = safeGet("input[name=course]:checked", "value");
+  submitData.specialization = submitData.course ? 
+    safeGet(`select[name="${submitData.course}-Spec"]`) : '';
+  submitData.status = safeGet("input[name=status]:checked", "value");
+  submitData.expSalary = safeGet("input[name=expSalary]");
+  submitData.prevQualificationPercentage = safeGet("input[name=prevQualificationPercentage]");
+  submitData.currSalary = safeGet("input[name=currSalary]");
+  submitData.currDomain = safeGet("input[name=currDomian]");
+  submitData.experience = safeGet("input[name=experience]");
+  submitData.empLocation = safeGet("input[name=empLocation]:checked", "value");
 
-  // If empLocation is "Abroad", set sector to "Private Sector"
-  submitData.sector =
-    submitData.empLocation === "Abroad"
-      ? "Private Sector"
-      : document.querySelector("input[name=sector]:checked")?.value || "";
+  // Handle sector based on location
+  submitData.sector = submitData.empLocation === "Abroad" ? 
+    "Private Sector" : safeGet("input[name=sector]:checked", "value");
 
-  submitData.prevUniversity =
-    document.querySelector("input[name=prevUniversity]")?.value || "";
-  submitData.prevQualification =
-    document.querySelector("input[name=prevQualification]")?.value || "";
-  submitData.exposure =
-    document.querySelector("input[name=exposure]:checked")?.value || "";
-  submitData.budget =
-    document.querySelector("input[name=budget1]:checked")?.value ||
-    document.querySelector("input[name=budget2]:checked")?.value ||
-    document.querySelector("input[name=budget3]:checked")?.value ||
+  submitData.prevUniversity = safeGet("input[name=prevUniversity]");
+  submitData.prevQualification = safeGet("input[name=prevQualification]");
+  submitData.exposure = safeGet("input[name=exposure]:checked", "value");
+
+  // Handle budget from multiple possible sources
+  submitData.budget = 
+    safeGet("input[name=budget1]:checked", "value") ||
+    safeGet("input[name=budget2]:checked", "value") ||
+    safeGet("input[name=budget3]:checked", "value") ||
     "";
-  submitData.description =
-    document.querySelector("textarea[name=Description]")?.value || "";
 
-  // Collect data from the final step
-  submitData.name =
-    document.querySelector("#q9 .answer input[name=name]")?.value || "";
-  submitData.email =
-    document.querySelector("#q9 .answer input[name=email]")?.value || "";
-  submitData.whatsapp =
-    document.querySelector("#q9 .answer input[name=whatsapp]")?.value || "";
-  submitData.mobile =
-    document.querySelector("#q9 .answer input[name=mobile]")?.value || "";
-  submitData.state = document.querySelector("#q9 #stateSelect")?.value || "";
-  submitData.city = document.querySelector("#q9 #citySelect")?.value || "";
+  // New fields
+  submitData.planningToJoin = safeGet("input[name=planningToJoin]:checked", "value");
+  submitData.help = safeGet("input[name=help]:checked", "value");
+  submitData.description = safeGet("textarea[name=Description]");
 
-  // Add the current query parameter
+  // Contact details
+  submitData.name = safeGet("#q11 .answer input[name=name]");
+  submitData.email = safeGet("#q11 .answer input[name=email]");
+  submitData.whatsapp = safeGet("#q11 .answer input[name=whatsapp]");
+  submitData.mobile = safeGet("#q11 .answer input[name=mobile]");
+  submitData.state = safeGet("#q11 #stateSelect");
+  submitData.city = safeGet("#q11 #citySelect");
+
+  // Handle referral
   const queryParams = new URLSearchParams(window.location.search);
   const ReferredBy = queryParams.get("studentid");
   if (ReferredBy) {
@@ -552,89 +598,202 @@ function collectFormData() {
   return submitData;
 }
 
-
 function validateFinalForm(submitData) {
-  let valid = true;
+  // Validation messages
+  const messages = {
+    required: (field) => `Please fill in your ${field}`,
+    whatsapp: "Please enter a valid 10-digit WhatsApp number",
+    email: "Please enter a valid email address",
+    mobile: "Please enter a valid 10-digit mobile number",
+  };
 
-  // Mobile verification
+  // Validate WhatsApp
   const whatsappPattern = /^\d{10}$/;
   if (!whatsappPattern.test(submitData.whatsapp)) {
-    valid = false;
-    showAlert("Please enter a valid WhatsApp number");
+    showAlert(messages.whatsapp);
+    return false;
   }
 
-  // Email verification
+  // Validate mobile
+  if (!whatsappPattern.test(submitData.mobile)) {
+    showAlert(messages.mobile);
+    return false;
+  }
+
+  // Validate email
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailPattern.test(submitData.email)) {
-    valid = false;
-    showAlert("Please enter a valid email address");
+    showAlert(messages.email);
+    return false;
   }
 
-  // Empty field verification
-  const requiredFields = [
-    "name",
-    "email",
-    "whatsapp",
-    "mobile",
-    "state",
-    "city",
-  ];
-  requiredFields.forEach((field) => {
+  // Required fields check
+  const requiredFields = ["name", "email", "whatsapp", "mobile", "state", "city"];
+  for (const field of requiredFields) {
     if (!submitData[field] || submitData[field].trim() === "") {
-      valid = false;
-      showAlert("Please fill all the required fields");
+      showAlert(messages.required(field));
+      return false;
+    }
+  }
+
+  return true;
+}
+// Submit Button Handler
+document.addEventListener('DOMContentLoaded', function() {
+  const submitBtn = document.querySelector("#q11 .nav .submit");
+  
+  if (!submitBtn) {
+    console.error("Submit button not found");
+    return;
+  }
+
+  submitBtn.addEventListener("click", async function() {
+    try {
+      const submitData = collectFormData();
+      
+      if (!validateFinalForm(submitData)) {
+        return;
+      }
+
+      // Show loading state
+      const buttonText = submitBtn.querySelector('.button-text');
+      const spinner = submitBtn.querySelector('.loading-spinner');
+      
+      if (buttonText && spinner) {
+        buttonText.textContent = 'Submitting...';
+        spinner.style.display = 'inline-block';
+        submitBtn.classList.add('loading');
+      }
+
+      // Disable submit button
+      this.disabled = true;
+
+      // First submit to your server
+      const response = await fetch("/submit-form-sug", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(submitData),
+      });
+
+      const responseData = await response.json();
+
+      if (response.status === 404 || responseData.success) {
+        // On success, submit to Google Sheet
+        try {
+          await submitToGoogleSheet(submitData);
+        } catch (sheetError) {
+          console.error("Google Sheet submission error:", sheetError);
+          // Continue with success flow even if sheet submission fails
+        }
+
+        // Show success message
+        showAlert(response.status === 404 ? 
+          "Form submitted successfully! We will analyze your requirements and get back to you." :
+          "Form submitted successfully!");
+        
+        // Show success UI and redirect
+        handleSuccessAndRedirect();
+      } else {
+        throw new Error(responseData.message || "Form submission failed");
+      }
+
+    } catch (error) {
+      console.error("Form submission error:", error);
+      showAlert(error.message || "An error occurred while submitting the form");
+      resetButtonState();
     }
   });
 
-  return valid;
-}
+  // Helper function to submit to Google Sheet
+  async function submitToGoogleSheet(formData) {
+    // Prepare data in the format expected by your Google Sheet
+    const sheetData = new FormData();
+    sheetData.append('Name', formData.name);
+    sheetData.append('Email', formData.email);
+    sheetData.append('WhatsApp', formData.whatsapp);
+    sheetData.append('Mobile', formData.mobile);
+    sheetData.append('State', formData.state);
+    sheetData.append('City', formData.city);
+    sheetData.append('Course', formData.course);
+    sheetData.append('Specialization', formData.specialization);
+    sheetData.append('Status', formData.status);
+    sheetData.append('Expected Salary', formData.expSalary || '');
+    sheetData.append('Current Salary', formData.currSalary || '');
+    sheetData.append('Experience', formData.experience || '');
+    sheetData.append('Current Domain', formData.currDomain || '');
+    sheetData.append('Employment Location', formData.empLocation);
+    sheetData.append('Sector', formData.sector);
+    sheetData.append('Previous University', formData.prevUniversity);
+    sheetData.append('Previous Qualification', formData.prevQualification);
+    sheetData.append('Previous Qualification %', formData.prevQualificationPercentage);
+    sheetData.append('Exposure', formData.exposure);
+    sheetData.append('Budget', formData.budget);
+    sheetData.append('Planning to Join', formData.planningToJoin);
+    sheetData.append('Help Required', formData.help);
+    sheetData.append('Description', formData.description || '');
+    sheetData.append('Timestamp', new Date().toLocaleString());
 
-// Submit Button
-const submitBtn = document.querySelector(".submit");
-
-submitBtn.addEventListener("click", function () {
-  const submitData = collectFormData();
-  const submitValidate = validateFinalForm(submitData);
-
-  if (submitValidate) {
-    document.querySelector("#q9 .nav .submit").disabled = true;
-
-    fetch("/submit-form-sug", {
+    return $.ajax({
+      url: "https://script.google.com/macros/s/AKfycbztb__IZgyugFPLAzT2zR-U-OHrHg1oPpUQvajZeuQ4lrDwu1F_p7Rq3y7EQ3joFq0I/exec",
+      data: sheetData,
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(submitData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          // If the response is not ok, throw an error to handle in catch
-          return response.json().then((data) => {
-            throw new Error(data.message || "Submission failed.");
-          });
-        }
-        return response.blob(); // Get the response as a blob for PDF download
-      })
-      .then((blob) => {
-        const downloadUrl = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = downloadUrl;
-        a.download = `${submitData.name}_Detailed_Report.pdf`; // Set the download file name
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(downloadUrl); // Clean up the URL
+      processData: false,
+      contentType: false,
+    });
+  }
 
-        document.querySelector(".graybg").style.display = "flex";
-        document.querySelector(".graybg > div").style.display = "flex";
-        document.querySelector("html").style.overflow = "hidden";
-        setTimeout(() => {
-          window.location.href = "https://indianeduhub.in/end-to-end-service/";
-        }, 8000);
-      })
-      .catch((error) => {
-        console.error("Error submitting data:", error);
-        showAlerts(error.message); // Display the error message in an alert
-      });
+  // Helper function to handle success UI and redirect
+  function handleSuccessAndRedirect() {
+    const grayBg = document.querySelector(".graybg");
+    const grayBgDiv = document.querySelector(".graybg > div");
+    
+    if (grayBg && grayBgDiv) {
+      grayBg.style.display = "flex";
+      grayBgDiv.style.display = "flex";
+      document.querySelector("html").style.overflow = "hidden";
+      setTimeout(() => {
+        window.location.href = "https://indianeduhub.in/end-to-end-service/";
+      }, 8000);
+    }
+  }
+
+  // Helper function to reset button state
+  function resetButtonState() {
+    const buttonText = submitBtn.querySelector('.button-text');
+    const spinner = submitBtn.querySelector('.loading-spinner');
+    
+    if (buttonText && spinner) {
+      buttonText.textContent = 'Submit';
+      spinner.style.display = 'none';
+      submitBtn.classList.remove('loading');
+    }
+    
+    submitBtn.disabled = false;
   }
 });
+
+// Enhanced showAlert function (unchanged)
+function showAlert(message) {
+  try {
+    const alertDiv = document.getElementById("alert");
+    if (!alertDiv) {
+      console.error("Alert div not found");
+      return;
+    }
+    alertDiv.innerHTML = message;
+    alertDiv.style.display = "block";
+    alertDiv.classList.add("animate__animated", "animate__fadeInUp");
+    setTimeout(() => {
+      alertDiv.classList.remove("animate__fadeInUp");
+      alertDiv.classList.add("animate__fadeOutUp");
+      setTimeout(() => {
+        alertDiv.style.display = "none";
+        alertDiv.classList.remove("animate__fadeOutUp");
+      }, 1000);
+    }, 5000);
+  } catch (error) {
+    console.error("Error showing alert:", error);
+  }
+}

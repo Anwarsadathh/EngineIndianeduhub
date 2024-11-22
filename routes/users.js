@@ -11,7 +11,8 @@ const multer = require("multer");
 const { ObjectId } = require("mongodb");
 const fontkit = require("fontkit");
 const sharp = require("sharp");
-
+const bcrypt = require("bcrypt");
+require("dotenv").config();
 const axios = require("axios");
 
 async function getImageBytes(imagePath) {
@@ -34,6 +35,87 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+
+
+// Middleware for verifying lead owner login
+function Data(req, res, next) {
+  if (req.session && req.session.user) {
+    next();
+  } else {
+    res.redirect("/dataadder");
+  }
+}
+
+// Login page route
+router.get("/dataadder", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/engine");
+  }
+  res.render("user/dataadder", {
+    layout: "admin-layout",
+    title: "Login",
+    error: null,
+  });
+});
+
+router.post("/logg", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    console.log("Login attempt with:", {
+      email,
+      passwordLength: password.length,
+    });
+    console.log("Configured email:", process.env.DATA_EMAIL);
+
+    if (email === process.env.DATA_EMAIL) {
+      console.log("Email matched");
+
+      try {
+        const storedHash = process.env.DATA_PASSWORD;
+        console.log("Attempting password match...");
+
+        const passwordMatch = await bcrypt.compare(password, storedHash);
+        console.log("Password match result:", passwordMatch);
+
+        if (passwordMatch) {
+          console.log("Login successful");
+          req.session.user = {
+            email,
+            isAdmin: true,
+          };
+          return res.redirect("/engine");
+        }
+      } catch (bcryptError) {
+        console.error("Bcrypt error:", bcryptError);
+      }
+    }
+
+    console.log("Authentication failed");
+    res.render("user/dataadder", {
+      layout: "admin-layout",
+      title: "Login",
+      error: "Invalid email or password",
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.render("user/dataadder", {
+      layout: "admin-layout",
+      title: "Login",
+      error: "An error occurred during login",
+    });
+  }
+});
+
+// Logout route
+router.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/dataadder");
+  });
+});
+
+
+
 
 router.get("/", async (req, res) => {
   try {
@@ -65,7 +147,22 @@ router.get("/", async (req, res) => {
       });
     });
 
+    // Convert the Set to an array
     const uniqueCourses = Array.from(availableCourses);
+
+    // Sort the array with custom logic: MBA first, M/m courses next, then alphabetically
+    uniqueCourses.sort((a, b) => {
+      const isMBA = (name) => name.toLowerCase() === "mba";
+      const startsWithM = (name) => name[0].toLowerCase() === "m";
+
+      if (isMBA(a)) return -1; // "MBA" always first
+      if (isMBA(b)) return 1; // "MBA" always first
+      if (startsWithM(a) && !startsWithM(b)) return -1; // M/m courses next
+      if (!startsWithM(a) && startsWithM(b)) return 1; // M/m courses next
+      return a.localeCompare(b); // Alphabetical sort for the rest
+    });
+
+    // Convert the specialization map Set to arrays
     const specializationMap = Object.fromEntries(
       Object.entries(courseSpecializationMap).map(([key, value]) => [
         key,
@@ -263,7 +360,7 @@ router.get("/", async (req, res) => {
 
 //     // Send template message via Interakt API
 //     const apiKey =
-//       "b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=";
+//       "d=";
 //     const interaktResponse = await axios.post(
 //       "https://api.interakt.ai/v1/public/message/",
 //       interaktData,
@@ -759,19 +856,18 @@ router.post("/submit-form-sug", async (req, res) => {
 
       // Update document in dummy_COLLECTION with the PDF link
       const clientsCollection = database.collection("dummy");
-     // Update the document in the dummy_COLLECTION with the PDF link and university names
-await clientsCollection.updateOne(
-  { _id: documentId },
-  {
-    $set: {
-      pdfLink: pdfUrl,
-      uni1: universityDetails.map((uni) => uni.universityName || "N/A"),
-    },
-  }
-);
+      // Update the document in the dummy_COLLECTION with the PDF link and university names
+      await clientsCollection.updateOne(
+        { _id: documentId },
+        {
+          $set: {
+            pdfLink: pdfUrl,
+            uni1: universityDetails.map((uni) => uni.universityName || "N/A"),
+          },
+        }
+      );
 
-
-       try {
+      try {
         // Prepare data for Interakt API request
         const interaktData = {
           countryCode: "+91",
@@ -788,7 +884,8 @@ await clientsCollection.updateOne(
         };
 
         // Send template message via Interakt API
-        const apiKey = "b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo="; // Replace with actual API key
+        const apiKey =
+          "d="; // Replace with actual API key
         const interaktResponse = await axios.post(
           "https://api.interakt.ai/v1/public/message/",
           interaktData,
@@ -802,42 +899,35 @@ await clientsCollection.updateOne(
 
         // Check if Interakt message was sent successfully
         if (interaktResponse.data.result) {
-          console.log("Template message sent successfully:", interaktResponse.data);
-          
-          // Send PDF as downloadable attachment and include success message
-          res.setHeader("Content-Type", "application/pdf");
-          res.setHeader(
-            "Content-Disposition",
-            `attachment; filename="${pdfFilename}"`
+          console.log(
+            "Template message sent successfully:",
+            interaktResponse.data
           );
-          
-          // Send both the PDF and success message
-          const responseData = {
-            success: true,
-            message: "Form processed and message sent successfully.",
-            pdfLink: pdfUrl,
-          };
-          
-          res.send(Buffer.from(pdfBytes));
         } else {
-          console.error("Failed to send template message:", interaktResponse.data);
-          // Still send the PDF but indicate message sending failed
-          res.setHeader("Content-Type", "application/pdf");
-          res.setHeader(
-            "Content-Disposition",
-            `attachment; filename="${pdfFilename}"`
+          console.error(
+            "Failed to send template message:",
+            interaktResponse.data
           );
-          res.send(Buffer.from(pdfBytes));
         }
+
+        // Send JSON response with PDF data
+        res.json({
+          success: true,
+          message: "Form processed successfully.",
+          pdfData: Buffer.from(pdfBytes).toString("base64"),
+          pdfFilename: baseFilename,
+          pdfLink: pdfUrl,
+        });
       } catch (interaktError) {
         console.error("Error sending Interakt message:", interaktError);
-        // Send PDF even if Interakt message fails
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader(
-          "Content-Disposition",
-          `attachment; filename="${pdfFilename}"`
-        );
-        res.send(Buffer.from(pdfBytes));
+        // Still send PDF data even if Interakt message fails
+        res.json({
+          success: true,
+          message: "Form processed but failed to send WhatsApp message.",
+          pdfData: Buffer.from(pdfBytes).toString("base64"),
+          pdfFilename: baseFilename,
+          pdfLink: pdfUrl,
+        });
       }
     } else {
       console.log("No matching document found or no university details.");
@@ -847,7 +937,10 @@ await clientsCollection.updateOne(
       });
     }
   } catch (error) {
-    console.error("Error occurred while processing the form submission:", error);
+    console.error(
+      "Error occurred while processing the form submission:",
+      error
+    );
     res.status(500).json({
       success: false,
       message: "An error occurred while processing the form submission.",
@@ -856,7 +949,7 @@ await clientsCollection.updateOne(
 });
 
 // GET route for engine data
-router.get("/engine", async (req, res) => {
+router.get("/engine",Data, async (req, res) => {
   try {
     const database = getDb();
     const engineCollection = database.collection(collection.ENGINE_COLLECTION);
@@ -869,7 +962,7 @@ router.get("/engine", async (req, res) => {
 });
 
 router.post(
-  "/submitUniversityForm",
+  "/submitUniversityForm",Data,
   upload.single("image"),
   async (req, res) => {
     try {
@@ -926,7 +1019,7 @@ router.post(
   }
 );
 
-router.get("/editUniversity", async (req, res) => {
+router.get("/editUniversity",Data, async (req, res) => {
   try {
     const universityId = req.query.id;
     const database = getDb();
@@ -951,7 +1044,7 @@ router.get("/editUniversity", async (req, res) => {
   }
 });
 
-router.post("/updateUniversity", upload.single("image"), async (req, res) => {
+router.post("/updateUniversity",Data, upload.single("image"), async (req, res) => {
   try {
     const {
       universityId,
