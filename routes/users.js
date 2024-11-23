@@ -784,7 +784,7 @@ router.post("/submit-form-sug", async (req, res) => {
         if (uni.imagePath) {
           const imagePath = path.resolve(
             __dirname,
-            "../uploads",
+            "https://suggest.indianeduhub.in/uploads",
             path.basename(uni.imagePath)
           );
           if (fs.existsSync(imagePath)) {
