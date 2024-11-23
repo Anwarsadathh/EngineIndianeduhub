@@ -350,7 +350,7 @@ router.get("/", async (req, res) => {
 //       type: "Template",
 //       callbackData: documentId.toString(),
 //       template: {
-//         name: "positive_auto_msg",
+//         name: "suggest_success",
 //         languageCode: "en",
 //         headerValues: [pdfUrl],
 //         bodyValues: [formData.name],
@@ -875,10 +875,10 @@ router.post("/submit-form-sug", async (req, res) => {
           type: "Template",
           callbackData: documentId.toString(),
           template: {
-            name: "positive_auto_msg",
+            name: "suggest_success",
             languageCode: "en",
-            headerValues: [pdfUrl],
-            bodyValues: [formData.name],
+            headerValues: [],
+            bodyValues: [],
             buttonValues: {},
           },
         };
