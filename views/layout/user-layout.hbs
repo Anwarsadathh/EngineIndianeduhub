@@ -44,7 +44,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     
-    <script src="../javascripts/statesandcities.js"></script>
+    <script src="/javascripts/statesandcities.js"></script>
     <script src="../javascripts/suggest.js"></script>
  <!-- jQuery and Select2 JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -59,7 +59,10 @@ $(document).ready(function() {
     $('.select2').select2({
         width: '100%'
     });
-
+  // Initialize Select2 on all dropdowns
+    $('.select2s').select2({
+        width: '100%'
+    });
 
 });
 </script>
